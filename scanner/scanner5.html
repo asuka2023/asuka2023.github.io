@@ -85,7 +85,7 @@ navigator.mediaDevices
     videocanvas.height = myvideo.videoHeight;
 */
 
-    ctx.drawImage(myvideo, 0, 0, videocanvas.width, videocanvas.height);
+    ctx.drawImage(myvideo, 0, 0, myvideo.videoWidth,myvideo.videoHeight,0,0,videocanvas.width, videocanvas.height);
 	barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
