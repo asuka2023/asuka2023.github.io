@@ -40,16 +40,16 @@ navigator.mediaDevices.getUserMedia(constraints)
 .then(photoSettings => {
   input.value = photoSettings.imageWidth;
 })
-.catch(error => ChromeSamples.log('Argh!', error.name || error));
+.catch(error => console.log('Argh!', error.name || error));
 
 function onTakePhotoButtonClick() {
   imageCapture.takePhoto({imageWidth: input.value})
   .then(blob => createImageBitmap(blob))
   .then(imageBitmap => {
     drawCanvas(imageBitmap);
-    ChromeSamples.log(`Photo size is ${imageBitmap.width}x${imageBitmap.height}`);
+    console.log(`Photo size is ${imageBitmap.width}x${imageBitmap.height}`);
   })
-  .catch(error => ChromeSamples.log(error));
+  .catch(error => console.log(error));
 }
 
 document.querySelector('video').addEventListener('play', function() {
