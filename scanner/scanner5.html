@@ -92,8 +92,8 @@ navigator.mediaDevices
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
   });
 window.setInterval(() => {
-    myvideo.width = window.innerWidth;
-    myvideo.height = window.innerHeight;
+    myvideo.width = window.visualViewport.width;
+    myvideo.height = window.visualViewport.height;
     //videocanvas.width = window.innerWidth;
    // videocanvas.height = window.innerHeight;
 }, 100);
