@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial;
+  font-size: 17px;
+}
+
+#videoCanvas {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.content {
+  position: fixed;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  color: #f1f1f1;
+  width: 100%;
+  padding: 20px;
+}
+
+</style>
+</head>
+<body>
+
+<video  id="myVideo" style="display: none"></video>
+<canvas id="videoCanvas"></canvas>
+<div class="content">
+    <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
+    <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
+</div>
+
+<script>
+// 檢查瀏覽器相容性
+if (!("BarcodeDetector" in globalThis)) {
+  console.log("此瀏覽器不支援條碼掃描。");
+  document.getElementById('message').innerHTML='此瀏覽器不支援條碼掃描';
+} else {
+  console.log("此瀏覽器支援條碼掃描");
+  document.getElementById('message').innerHTML='此瀏覽器支援條碼掃描';
+  // 建立條碼種類
+  const barcodeDetector = new BarcodeDetector({
+    formats: ["code_128"],
+  });
+    // Prefer camera resolution nearest to 1280x720.
+const constraints = {
+  audio: false,
+  video: {facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
+};
+  
+const myvideo = document.getElementById('myVideo');
+const videocanvas = document.getElementById('videoCanvas');
+navigator.mediaDevices
+  .getUserMedia(constraints)
+  .then((mediaStream) => {
+    myvideo.srcObject = mediaStream;
+    myvideo.onloadedmetadata = () => {
+      myvideo.play();
+      setTimeout(drawImge , 300);
+    };
+
+  })
+  .catch((err) => {
+    console.error(`${err.name}: ${err.message}`);
+    document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
+  });
+
+window.setInterval(async () => {
+  
+}, 100);
+  function drawImge(){
+    
+    var ctx = videocanvas.getContext('2d');
+/*
+    videocanvas.width = myvideo.videoWidth;
+    videocanvas.height = myvideo.videoHeight;
+*/
+
+    ctx.drawImage(video, 0, 0, myvideo.width, myvideo.height);
+	barcodeDetector
+	  .detect(myvideo)
+	  .then((barcodes) => {
+	    var cornerPoints = '';
+	    var result = '';
+		barcodes.forEach((barcode)  => {
+			console.log(barcode.rawValue);
+			 result += ` ${barcode.rawValue}, `;
+			 cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
+       ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
+        ctx.lineWidth = "6";
+        ctx.strokeStyle = "red";    
+        ctx.stroke();
+		});
+		document.getElementById('message').innerHTML= `條碼:${result} `;
+		document.getElementById('cornerPoints').innerHTML= cornerPoints;
+	  })
+	  .catch((err) => {
+		console.log(err);
+	  });
+    /*
+    var faceArea = 300;
+    var pX=canvas.width/2 - faceArea/2;
+    var pY=canvas.height/2 - faceArea/2;
+
+    ctx.rect(pX,pY,faceArea,faceArea);
+    ctx.lineWidth = "6";
+    ctx.strokeStyle = "red";    
+    ctx.stroke();
+*/
+
+    setTimeout(drawImge , 100);
+}
+}
+
+</script>
+</body>
+</html>
