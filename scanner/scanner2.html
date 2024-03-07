@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+<div id="reader" ></div>
+<div >
+    <button onclick="startscanner()">Start</button>
+    <button onclick="stopscanner()">Stop</button>
+</div>
+<div id="qr-reader-results"></div>
+</body>
+<script src="html5-qrcode.min.js"></script>
+<script>
+  var lastResult = '';
+  const html5QrCode = new Html5Qrcode("reader");
+  // This method will trigger user permissions
+Html5Qrcode.getCameras().then(devices => {
+  /**
+   * devices would be an array of objects of type:
+   * { id: "id", label: "label" }
+   */
+  if (devices && devices.length) {
+    var cameraId = devices[0].id;
+    // .. use this to start scanning.
+  }
+}).catch(err => {
+  // handle err
+});
+const qrCodeSuccessCallback = (decodedText, decodedResult) => {
+    if (decodedText !== lastResult) {
+
+                lastResult = decodedText;
+                // Handle on success condition with the decoded message.
+                console.log(`Scan result ${decodedText}`, decodedResult);
+                document.getElementById('qr-reader-results').innerHTML= `Scan result ${decodedText}`;
+            }
+};
+const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+
+ function startscanner() {
+      // Select back camera or fail with `OverconstrainedError`.
+        html5QrCode.start({ facingMode: { exact: "environment"} }, config, qrCodeSuccessCallback);
+    }
+   function stopscanner() {
+      html5QrCode.stop().then((ignore) => {
+      // QR Code scanning is stopped.
+    }).catch((err) => {
+      // Stop failed, handle it.
+    });
+    }
+
+</script>
+</html>
