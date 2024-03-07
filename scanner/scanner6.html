@@ -51,12 +51,7 @@ const videocanvas = document.getElementById('videoCanvas');
 videocanvas.width = window.visualViewport.width;
 videocanvas.height = window.visualViewport.height;
 document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${videocanvas.width},${videocanvas.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
-	var ctx = videocanvas.getContext('2d');
 
-    ctx.rect(0, 0, videocanvas.width, videocanvas.height);
-    ctx.lineWidth = "6";
-    ctx.strokeStyle = "red";    
-    ctx.stroke();
 // 檢查瀏覽器相容性
 if (!("BarcodeDetector" in globalThis)) {
   console.log("此瀏覽器不支援條碼掃描。");
@@ -74,7 +69,7 @@ const constraints = {
   video: {facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
 };
 	
-/*
+
 navigator.mediaDevices
   .getUserMedia(constraints)
   .then((mediaStream) => {
@@ -114,7 +109,7 @@ window.setInterval(async () => {
 		console.log(err);
 	  });
 }, 100);
-*/
+
 function drawImge(){
     var ctx = videocanvas.getContext('2d');
     ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
