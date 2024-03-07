@@ -17,8 +17,7 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+
 }
 
 #videoCanvas {
@@ -52,8 +51,8 @@ body {
 
 <script>
 const myvideo = document.getElementById('myVideo');
-//myvideo.width = window.visualViewport.width;
-//myvideo.height = window.visualViewport.height;
+myvideo.width = window.visualViewport.width;
+myvideo.height = window.visualViewport.height;
 document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
 	
 // 檢查瀏覽器相容性
@@ -126,8 +125,8 @@ window.setInterval(async () => {
 }
 
 visualViewport.addEventListener('resize', () => {
-   //myvideo.width = window.visualViewport.width;
-  // myvideo.height = window.visualViewport.height;
+   myvideo.width = window.visualViewport.width;
+   myvideo.height = window.visualViewport.height;
 document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
 });
 screen.orientation.addEventListener("change", (event) => {
