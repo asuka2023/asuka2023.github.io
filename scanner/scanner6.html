@@ -39,11 +39,9 @@ body {
 </style>
 </head>
 <body>
-
 <video  id="myVideo" style="display: none"></video>
 <canvas id="videoCanvas"></canvas>
 <div class="content">
-   
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
 </div>
@@ -82,7 +80,6 @@ ctx.lineWidth = "6";
 ctx.strokeStyle = "red";    
 ctx.stroke();
 
-	
 navigator.mediaDevices
   .getUserMedia(constraints)
   .then((mediaStream) => {
@@ -122,16 +119,9 @@ window.setInterval(async () => {
 		console.log(err);
 	  });
 }, 100);
-	function drawImge(){
-    
+function drawImge(){
     var ctx = canvas.getContext('2d');
-
-
-
     ctx.drawImage(myvideo, 0, 0, videocanvas.width, videocanvas.height);
-
-
-
     setTimeout(drawImge , 100);
 }
 }
