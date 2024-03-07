@@ -46,6 +46,17 @@ body {
 </div>
 
 <script>
+screen.orientation.lock("landscape-primary");	
+screen.orientation
+    .lock("landscape")
+    .then(() => {
+	      alert( `Locked to ${oppositeOrientation}\n`);
+
+    })
+    .catch((error) => {
+	      alert(`${error}\n`);
+
+    });
 const myvideo = document.getElementById('myVideo');
 const videocanvas = document.getElementById('videoCanvas');
 videocanvas.width = window.visualViewport.width;
@@ -93,13 +104,15 @@ window.setInterval(async () => {
 	    var cornerPoints = '';
 	    var result = '';
 		barcodes.forEach((barcode)  => {
+			  var ctx = videocanvas.getContext('2d');
+    			ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
 			console.log(barcode.rawValue);
 			 result += ` ${barcode.rawValue}, `;
 			 //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-			   // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-			    //ctx.lineWidth = "6";
-			   // ctx.strokeStyle = "red";    
-			    //ctx.stroke();
+			    ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
+			    ctx.lineWidth = "6";
+			    ctx.strokeStyle = "green";    
+			    ctx.stroke();
 		});
 		document.getElementById('message').innerHTML= `條碼:${result} `;
 		//document.getElementById('cornerPoints').innerHTML= cornerPoints;
