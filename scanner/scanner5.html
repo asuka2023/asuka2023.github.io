@@ -96,15 +96,15 @@ function openCamera(){
 function openCameraSuccess(mediaStream){ 
     myvideo.pause();
     myvideo.srcObject = mediaStream;
-    myvideo.onloadedmetadata = () => {
-      myvideo.play();
-    };
+  
 }
 function openCameraError(err){ 
     console.error(`${err.name}: ${err.message}`);
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
 }
-
+myvideo.addEventListener("loadedmetadata", (event) => {
+  myvideo.play();
+});
 visualViewport.addEventListener('resize', () => {
    myvideo.width = window.visualViewport.width;
    myvideo.height = window.visualViewport.height;
