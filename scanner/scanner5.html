@@ -20,14 +20,6 @@ body {
   min-width: 100%;
   min-height: 100%;
 }
-#videoCanvas {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0,0);
-  min-width: 100%;
-  min-height: 100%;
-}	    
 
 .content {
   position: fixed;
@@ -41,10 +33,11 @@ body {
 </style>
 </head>
 <body>
-<!--style="display: none"-->
-<video  id="myVideo" ></video>
-<canvas id="videoCanvas"></canvas>
+
+<video  id="myVideo"></video>
+
 <div class="content">
+    <button id="myBtn" onclick="myFunction()">Pause</button>
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
 </div>
@@ -59,16 +52,14 @@ if (!("BarcodeDetector" in globalThis)) {
   document.getElementById('message').innerHTML='此瀏覽器支援條碼掃描';
   // 建立條碼種類
   const barcodeDetector = new BarcodeDetector({
-    formats: ["code_128","qr_code"],
+    formats: ["code_128"],
   });
     // Prefer camera resolution nearest to 1280x720.
 const constraints = {
   audio: false,
   video: { width: { min: 720, ideal: 4096, max: 4096  },height: { min: 720, ideal: 2160, max: 4096 } ,facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
 };
-  
 const myvideo = document.getElementById('myVideo');
-const videocanvas = document.getElementById('videoCanvas');
 navigator.mediaDevices
   .getUserMedia(constraints)
   .then((mediaStream) => {
@@ -83,29 +74,25 @@ navigator.mediaDevices
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
   });
 
-barcodeDetector
+window.setInterval(async () => {
+  	barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
-	    ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
 	    var cornerPoints = '';
 	    var result = '';
 		barcodes.forEach((barcode)  => {
 			console.log(barcode.rawValue);
 			 result += ` ${barcode.rawValue}, `;
-			
-			// cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-       ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-        ctx.lineWidth = "6";
-        ctx.strokeStyle = "red";    
-        ctx.stroke();
+			 //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
 		});
 		document.getElementById('message').innerHTML= `條碼:${result} `;
-		document.getElementById('cornerPoints').innerHTML= `畫布大小:[${videocanvas.width},${videocanvas.height}],畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}] `;
+		//document.getElementById('cornerPoints').innerHTML= cornerPoints;
+		document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
 	  })
 	  .catch((err) => {
 		console.log(err);
 	  });
- 
+}, 100);
 }
 
 </script>
