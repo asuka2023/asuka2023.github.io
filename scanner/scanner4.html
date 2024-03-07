@@ -97,10 +97,11 @@ window.setInterval(async () => {
 		barcodes.forEach((barcode)  => {
 			console.log(barcode.rawValue);
 			 result += ` ${barcode.rawValue}, `;
-			 cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
+			 //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
 		});
 		document.getElementById('message').innerHTML= `條碼:${result} `;
-		document.getElementById('cornerPoints').innerHTML= cornerPoints;
+		//document.getElementById('cornerPoints').innerHTML= cornerPoints;
+		document.getElementById('cornerPoints').innerHTML= `畫布大小:[${videocanvas.width},${videocanvas.height}],畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}] `;
 	  })
 	  .catch((err) => {
 		console.log(err);
