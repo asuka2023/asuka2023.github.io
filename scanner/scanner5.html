@@ -20,14 +20,6 @@ body {
 
 }
 
-#videoCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 0, 0, 0);	
-}
-
 .content {
   position: fixed;
   bottom: 0;
@@ -42,9 +34,7 @@ body {
 <body>
 
 <video  id="myVideo" style="display: block" ></video>
-<!--<canvas id="videoCanvas"></canvas>-->
 <div class="content">
-   
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
 </div>
@@ -64,42 +54,11 @@ if (!("BarcodeDetector" in globalThis)) {
   document.getElementById('message').innerHTML='此瀏覽器支援條碼掃描';
   // 建立條碼種類
   const barcodeDetector = new BarcodeDetector({
-    formats: ["code_128"],
+    formats: ["code_128","qr_code"],
   });
-    // Prefer camera resolution nearest to 1280x720.
-const constraints = {
-  audio: false,
-  video: { width: window.visualViewport.width, height:  window.visualViewport.height ,facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
-};
-
-
-	/*
-const videocanvas = document.getElementById('videoCanvas');	
-	
-var ctx = videocanvas.getContext('2d');  
-ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
-ctx.rect(20, 20, 200, 100);
-ctx.lineWidth = "6";
-ctx.strokeStyle = "red";    
-ctx.stroke();
-	*/
-	
-navigator.mediaDevices
-  .getUserMedia(constraints)
-  .then((mediaStream) => {
-    myvideo.srcObject = mediaStream;
-    myvideo.onloadedmetadata = () => {
-      myvideo.play();
-    };
-
-  })
-  .catch((err) => {
-    console.error(`${err.name}: ${err.message}`);
-    document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
-  });
-
+  openCamera();
 window.setInterval(async () => {
-  	barcodeDetector
+    	barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
 	  
@@ -123,16 +82,39 @@ window.setInterval(async () => {
 	  });
 }, 100);
 }
+function openCamera(){
+  // Prefer camera resolution nearest to 1280x720.
+  var constraints = {
+    audio: false,
+    video: { width: window.visualViewport.width, height:  window.visualViewport.height ,facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
+  };
+  navigator.mediaDevices
+  .getUserMedia(constraints)
+  .then(openCameraSuccess)
+  .catch(openCameraError);
+}
+function openCameraSuccess(mediaStream){ 
+    myvideo.pause();
+    myvideo.srcObject = mediaStream;
+    myvideo.onloadedmetadata = () => {
+      myvideo.play();
+    };
+}
+function openCameraError(err){ 
+    console.error(`${err.name}: ${err.message}`);
+    document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
+}
 
 visualViewport.addEventListener('resize', () => {
    myvideo.width = window.visualViewport.width;
    myvideo.height = window.visualViewport.height;
-document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
+   openCamera();	
+  document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
 });
 screen.orientation.addEventListener("change", (event) => {
   const type = event.target.type;
   const angle = event.target.angle;
-  
+  openCamera();
   document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${type}, 旋轉角度:${angle}`;
 });
 </script>
