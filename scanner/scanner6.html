@@ -72,7 +72,7 @@ if (!("BarcodeDetector" in globalThis)) {
   document.getElementById('message').innerHTML='此瀏覽器支援條碼掃描';
   // 建立條碼種類
   const barcodeDetector = new BarcodeDetector({
-    formats: ["code_128"],
+    formats: ["code_128","qr_code"],
   });
     // Prefer camera resolution nearest to 1280x720.
 const constraints = {
@@ -100,12 +100,12 @@ window.setInterval(async () => {
   	barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
-	  
+	    var ctx = videocanvas.getContext('2d');
+    	    ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
 	    var cornerPoints = '';
 	    var result = '';
 		barcodes.forEach((barcode)  => {
-			  var ctx = videocanvas.getContext('2d');
-    			ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
+			
 			console.log(barcode.rawValue);
 			 result += ` ${barcode.rawValue}, `;
 			 //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
@@ -127,10 +127,6 @@ function drawImge(){
     var ctx = videocanvas.getContext('2d');
     ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
     ctx.drawImage(myvideo, 0, 0, videocanvas.width, videocanvas.height);
-    ctx.rect(0, 0, videocanvas.width, videocanvas.height);
-    ctx.lineWidth = "6";
-    ctx.strokeStyle = "red";    
-    ctx.stroke();
     setTimeout(drawImge , 100);
 }
 }
