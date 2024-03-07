@@ -17,16 +17,12 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  min-width: 100%;
-  min-height: 100%;
 }
 
 #videoCanvas {
   position: fixed;
   top: 0;
   left: 0;
-  min-width: 100%;
-  min-height: 100%;
   background: rgba(0, 0, 0, 0);	
 }
 
@@ -117,7 +113,12 @@ window.setInterval(async () => {
 	  });
 }, 100);
 }
-
+window.setInterval(() => {
+    myvideo.width = window.innerWidth/2;
+    myvideo.height = window.innerHeight/2;
+    videocanvas.width = window.innerWidth/2;
+    videocanvas.height = window.innerHeight/2;
+}, 100);
 </script>
 </body>
 </html>
