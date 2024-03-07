@@ -13,7 +13,7 @@ body {
   font-size: 17px;
 }
 
-#videoCanvas {
+#myVideo {
   position: fixed;
   right: 0;
   bottom: 0;
@@ -33,8 +33,8 @@ body {
 </style>
 </head>
 <body>
-
-<video  id="myVideo" style="display: none"></video>
+<!--style="display: none"-->
+<video  id="myVideo" ></video>
 <canvas id="videoCanvas"></canvas>
 <div class="content">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
@@ -67,7 +67,7 @@ navigator.mediaDevices
     myvideo.srcObject = mediaStream;
     myvideo.onloadedmetadata = () => {
       myvideo.play();
-      setTimeout(drawImge , 300);
+     // setTimeout(drawImge , 300);
     };
 
   })
