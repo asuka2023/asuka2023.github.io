@@ -51,6 +51,8 @@ body {
 
 <script>
 const myvideo = document.getElementById('myVideo');
+myvideo.width = window.visualViewport.width;
+myvideo.height = window.visualViewport.height;
 document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
 	
 // 檢查瀏覽器相容性
@@ -130,7 +132,7 @@ document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${
 screen.orientation.addEventListener("change", (event) => {
   const type = event.target.type;
   const angle = event.target.angle;
-
+  
   document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${type}, 旋轉角度:${angle}`;
 });
 </script>
