@@ -7,16 +7,25 @@
   <p id="w"></p>
   <p id="h"></p>
   <p id="s"></p>
+  <p id="o"></p>
 <script>
 
 const w = document.getElementById('w');
 const h = document.getElementById('h');
+const s = document.getElementById('s');
+const o = document.getElementById('o');
 w.innerHTML = `寬度:${window.visualViewport.width}`;
 h.innerHTML = `高度:${window.visualViewport.height}`;
-h.innerHTML = `縮放比例:${window.visualViewport.scale}`;
+s.innerHTML = `縮放比例:${window.visualViewport.scale}`;
 visualViewport.addEventListener('resize', () => {
     w.innerHTML = `寬度:${window.visualViewport.width}`;
     h.innerHTML = `高度:${window.visualViewport.height}`;
+});
+screen.orientation.addEventListener("change", (event) => {
+  const type = event.target.type;
+  const angle = event.target.angle;
+  o.innerHTML = `螢幕方向: ${type}, 旋轉角度:${angle}`;
+  console.log(`ScreenOrientation change: ${type}, ${angle} degrees.`);
 });
 </script>
 </body>
