@@ -88,8 +88,8 @@ window.setInterval(async () => {
   	barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
-	     var ctx = canvas.getContext('2d');  
-	    ctx.clearRect(0, 0, canvas.width, canvas.height);  
+	    var ctx = videocanvas.getContext('2d');  
+	    ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
 	    var cornerPoints = '';
 	    var result = '';
 		barcodes.forEach((barcode)  => {
