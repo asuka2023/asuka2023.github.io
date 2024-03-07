@@ -21,12 +21,13 @@ o.innerHTML = `螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.o
 visualViewport.addEventListener('resize', () => {
     w.innerHTML = `寬度:${window.visualViewport.width}`;
     h.innerHTML = `高度:${window.visualViewport.height}`;
+    console.log(`寬度: ${window.visualViewport.width}, 高度:${window.visualViewport.height}`);
 });
 screen.orientation.addEventListener("change", (event) => {
   const type = event.target.type;
   const angle = event.target.angle;
   o.innerHTML = `螢幕方向: ${type}, 旋轉角度:${angle}`;
-  console.log(`ScreenOrientation change: ${type}, ${angle} degrees.`);
+  console.log(`螢幕方向: ${type}, 旋轉角度:${angle}`);
 });
 </script>
 </body>
