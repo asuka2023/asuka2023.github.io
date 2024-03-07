@@ -76,9 +76,7 @@ navigator.mediaDevices
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
   });
 
-window.setInterval(async () => {
-  
-}, 100);
+
   function drawImge(){
     
     var ctx = videocanvas.getContext('2d');
@@ -87,7 +85,7 @@ window.setInterval(async () => {
     videocanvas.height = myvideo.videoHeight;
 */
 
-    ctx.drawImage(video, 0, 0, myvideo.width, myvideo.height);
+    ctx.drawImage(video, 0, 0, videocanvas.width, videocanvas.height);
 	barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
