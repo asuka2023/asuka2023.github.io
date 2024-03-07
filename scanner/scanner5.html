@@ -51,7 +51,7 @@ if (!("BarcodeDetector" in globalThis)) {
   document.getElementById('message').innerHTML='此瀏覽器支援條碼掃描';
   // 建立條碼種類
   const barcodeDetector = new BarcodeDetector({
-    formats: ["code_128"],
+    formats: ["code_128","qr_code"],
   });
     // Prefer camera resolution nearest to 1280x720.
 const constraints = {
