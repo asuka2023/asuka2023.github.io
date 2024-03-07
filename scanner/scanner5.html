@@ -69,7 +69,15 @@ const constraints = {
   video: {facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
 };
 const myvideo = document.getElementById('myVideo');
-const videocanvas = document.getElementById('videoCanvas');
+const videocanvas = document.getElementById('videoCanvas');	
+	
+var ctx = videocanvas.getContext('2d');  
+ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
+ctx.rect(20, 20, 200, 100);
+ctx.lineWidth = "6";
+ctx.strokeStyle = "red";    
+ctx.stroke();
+	
 navigator.mediaDevices
   .getUserMedia(constraints)
   .then((mediaStream) => {
@@ -88,12 +96,7 @@ window.setInterval(async () => {
   	barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
-	    var ctx = videocanvas.getContext('2d');  
-	    //ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
-	       ctx.rect(20, 20, 200, 100);
-			    ctx.lineWidth = "6";
-			    ctx.strokeStyle = "red";    
-			    ctx.stroke();	  
+	  
 	    var cornerPoints = '';
 	    var result = '';
 		barcodes.forEach((barcode)  => {
