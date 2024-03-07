@@ -87,7 +87,12 @@ navigator.mediaDevices
     console.error(`${err.name}: ${err.message}`);
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
   });
-
+window.setInterval(() => {
+    myvideo.width = window.innerWidth;
+    myvideo.height = window.innerHeight;
+    videocanvas.width = window.innerWidth;
+    videocanvas.height = window.innerHeight;
+}, 100);
 window.setInterval(async () => {
   	barcodeDetector
 	  .detect(myvideo)
@@ -113,12 +118,7 @@ window.setInterval(async () => {
 	  });
 }, 100);
 }
-window.setInterval(() => {
-    myvideo.width = window.innerWidth;
-    myvideo.height = window.innerHeight;
-    videocanvas.width = window.innerWidth;
-    videocanvas.height = window.innerHeight;
-}, 100);
+
 </script>
 </body>
 </html>
