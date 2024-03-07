@@ -87,7 +87,7 @@ navigator.mediaDevices
     myvideo.srcObject = mediaStream;
     myvideo.onloadedmetadata = () => {
       myvideo.play();
-	    drawImge();
+	   setTimeout(drawImge , 300);
     };
 
   })
@@ -97,11 +97,17 @@ navigator.mediaDevices
   });
 
 window.setInterval(async () => {
-  	barcodeDetector
+  
+}, 100);
+
+function drawImge(){
+    var ctx = videocanvas.getContext('2d');
+    ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
+    ctx.drawImage(myvideo, 0, 0, videocanvas.width, videocanvas.height);
+    barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
-	    var ctx = videocanvas.getContext('2d');
-    	    ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
+	 
 	    var cornerPoints = '';
 	    var result = '';
 		barcodes.forEach((barcode)  => {
@@ -121,12 +127,6 @@ window.setInterval(async () => {
 	  .catch((err) => {
 		console.log(err);
 	  });
-}, 100);
-
-function drawImge(){
-    var ctx = videocanvas.getContext('2d');
-    ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
-    ctx.drawImage(myvideo, 0, 0, videocanvas.width, videocanvas.height);
     setTimeout(drawImge , 100);
 }
 }
