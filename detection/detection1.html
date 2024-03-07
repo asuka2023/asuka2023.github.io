@@ -6,13 +6,18 @@
 <body>
   <p id="w"></p>
   <p id="h"></p>
+  <p id="s"></p>
 <script>
 
 const w = document.getElementById('w');
 const h = document.getElementById('h');
 w.innerHTML = `寬度:${window.visualViewport.width}`;
 h.innerHTML = `高度:${window.visualViewport.height}`;
-
+h.innerHTML = `縮放比例:${window.visualViewport.scale}`;
+visualViewport.addEventListener('resize', () => {
+    w.innerHTML = `寬度:${window.visualViewport.width}`;
+    h.innerHTML = `高度:${window.visualViewport.height}`;
+});
 </script>
 </body>
 </html>
