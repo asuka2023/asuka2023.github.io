@@ -17,12 +17,14 @@ body {
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
 }
 
 #videoCanvas {
   position: fixed;
   top: 0;
   left: 0;
+  width: 100%;
   background: rgba(0, 0, 0, 0);	
 }
 
@@ -88,9 +90,9 @@ navigator.mediaDevices
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
   });
 window.setInterval(() => {
-    myvideo.width = window.innerWidth;
+    //myvideo.width = window.innerWidth;
     myvideo.height = window.innerHeight;
-    videocanvas.width = window.innerWidth;
+    //videocanvas.width = window.innerWidth;
     videocanvas.height = window.innerHeight;
 }, 100);
 window.setInterval(async () => {
