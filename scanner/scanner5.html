@@ -42,7 +42,7 @@ body {
 <body>
 
 <video  id="myVideo"></video>
-//<canvas id="videoCanvas"></canvas>
+<!--<canvas id="videoCanvas"></canvas>-->
 <div class="content">
    
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
@@ -91,12 +91,13 @@ navigator.mediaDevices
     console.error(`${err.name}: ${err.message}`);
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
   });
-window.setInterval(() => {
-    myvideo.width = window.visualViewport.width;
+visualViewport.addEventListener('resize', () => {
+       myvideo.width = window.visualViewport.width;
     myvideo.height = window.visualViewport.height;
     //videocanvas.width = window.innerWidth;
    // videocanvas.height = window.innerHeight;
-}, 100);
+});	
+
 window.setInterval(async () => {
   	barcodeDetector
 	  .detect(myvideo)
