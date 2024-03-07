@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+  <p id="w"></p>
+  <p id="h"></p>
+<script>
+
+const w = document.getElementById('w');
+const h = document.getElementById('h');
+w.innerHTML = `${window.visualViewport.width}`;
+h.innerHTML = `${window.visualViewport.height}`;
+
+</script>
+</body>
+</html>
