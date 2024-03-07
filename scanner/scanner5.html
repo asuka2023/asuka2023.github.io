@@ -70,7 +70,7 @@ if (!("BarcodeDetector" in globalThis)) {
     // Prefer camera resolution nearest to 1280x720.
 const constraints = {
   audio: false,
-  video: {facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
+  video: { width: window.visualViewport.width, height:  window.visualViewport.height ,facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
 };
 
 
