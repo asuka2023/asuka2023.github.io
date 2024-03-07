@@ -23,7 +23,6 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
   background: rgba(0, 0, 0, 0);	
 }
 
@@ -73,12 +72,7 @@ const constraints = {
 
 
 	
-var ctx = videocanvas.getContext('2d');  
-ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
-ctx.rect(0, 0, videocanvas.width, videocanvas.height);
-ctx.lineWidth = "6";
-ctx.strokeStyle = "red";    
-ctx.stroke();
+
 
 navigator.mediaDevices
   .getUserMedia(constraints)
@@ -121,7 +115,12 @@ window.setInterval(async () => {
 }, 100);
 function drawImge(){
     var ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
     ctx.drawImage(myvideo, 0, 0, videocanvas.width, videocanvas.height);
+    ctx.rect(0, 0, videocanvas.width, videocanvas.height);
+    ctx.lineWidth = "6";
+    ctx.strokeStyle = "red";    
+    ctx.stroke();
     setTimeout(drawImge , 100);
 }
 }
