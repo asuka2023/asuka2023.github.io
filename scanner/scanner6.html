@@ -51,7 +51,7 @@ const videocanvas = document.getElementById('videoCanvas');
 videocanvas.width = window.visualViewport.width;
 videocanvas.height = window.visualViewport.height;
 document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${videocanvas.width},${videocanvas.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
-	var ctx = canvas.getContext('2d');
+	var ctx = videocanvas.getContext('2d');
 
     ctx.rect(0, 0, videocanvas.width, videocanvas.height);
     ctx.lineWidth = "6";
@@ -116,7 +116,7 @@ window.setInterval(async () => {
 }, 100);
 */
 function drawImge(){
-    var ctx = canvas.getContext('2d');
+    var ctx = videocanvas.getContext('2d');
     ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
     ctx.drawImage(myvideo, 0, 0, videocanvas.width, videocanvas.height);
     ctx.rect(0, 0, videocanvas.width, videocanvas.height);
