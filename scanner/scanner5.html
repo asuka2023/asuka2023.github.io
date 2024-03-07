@@ -102,7 +102,7 @@ navigator.mediaDevices
         ctx.stroke();
 		});
 		document.getElementById('message').innerHTML= `條碼:${result} `;
-		document.getElementById('cornerPoints').innerHTML= `畫布大小:[${videocanvas.width},$(videocanvas.height)],畫面大小:[${myvideo.videoWidth},$(myvideo.videoHeight)] `;
+		document.getElementById('cornerPoints').innerHTML= `畫布大小:[${videocanvas.width},${videocanvas.height}],畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}] `;
 	  })
 	  .catch((err) => {
 		console.log(err);
