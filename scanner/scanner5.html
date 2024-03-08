@@ -141,15 +141,21 @@
     }
     //關閉相機串流
     function stopCamera() {
-      const stream = myvideo.srcObject;
-      const tracks = stream.getTracks();
+      try {
+        const stream = myvideo.srcObject;
+        const tracks = stream.getTracks();
 
-      tracks.forEach((track) => {
-        track.stop();
-      });
+        tracks.forEach((track) => {
+          track.stop();
+        });
 
-      myvideo.srcObject = null;
-      alert('stopCamera');
+        myvideo.srcObject = null;
+        alert('stopCamera');
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
+
     }
     //切換相機
     function mediaDevices_onchange() {
