@@ -133,6 +133,7 @@ function openCameraError(err){
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
 }
 function mediaDevices_onchange() {
+	 myvideo.pause();
  	openCamera();
 }
 myvideo.addEventListener("loadedmetadata", (event) => {
