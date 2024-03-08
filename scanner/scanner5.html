@@ -44,6 +44,8 @@
   </div>
 
   <script>
+    var scannerInterval = setInterval(myTimer, 10000);
+    stopScannerBarode();
     const myvideo = document.getElementById('myVideo');
     //myvideo.width = window.visualViewport.width;
     //myvideo.height = window.visualViewport.height;
@@ -88,30 +90,41 @@
           alert(`${err.name}: ${err.message}`);
         });
     }
+    //開啟判斷條碼
+    function startScannerBarode() {
+      scannerInterval = setInterval(scannerBarode, 100);
+    }
+     //關閉判斷條碼
+    function stopScannerBarode() {
+      clearInterval(scannerInterval);
+    }
     //判斷條碼
     function scannerBarode() {
-      barcodeDetector
-        .detect(myvideo)
-        .then((barcodes) => {
-          var cornerPoints = '';
-          var result = '';
-          barcodes.forEach((barcode) => {
-            console.log(barcode.rawValue);
-            result += ` ${barcode.rawValue}, `;
-            //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-            // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-            //ctx.lineWidth = "6";
-            // ctx.strokeStyle = "red";    
-            //ctx.stroke();
+      if (myvideo.srcObject != null) {
+        barcodeDetector
+          .detect(myvideo)
+          .then((barcodes) => {
+            var cornerPoints = '';
+            var result = '';
+            barcodes.forEach((barcode) => {
+              console.log(barcode.rawValue);
+              result += ` ${barcode.rawValue}, `;
+              //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
+              // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
+              //ctx.lineWidth = "6";
+              // ctx.strokeStyle = "red";    
+              //ctx.stroke();
+            });
+            document.getElementById('message').innerHTML = `條碼:${result} `;
+            //document.getElementById('cornerPoints').innerHTML= cornerPoints;
+            //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+            
+          })
+          .catch((err) => {
+            console.log(err);
           });
-          //document.getElementById('message').innerHTML= `條碼:${result} `;
-          //document.getElementById('cornerPoints').innerHTML= cornerPoints;
-          //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
-          setTimeout(scannerBarode, 100);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      }
+
     }
     //開啟相機
     function openCamera() {
@@ -130,7 +143,7 @@
     }
     //開啟相機成功
     function openCameraSuccess(mediaStream) {
-      alert('openCamera');
+
       myvideo.srcObject = mediaStream;
 
     }
@@ -151,7 +164,7 @@
           });
 
           myvideo.srcObject = null;
-          alert('stopCamera');
+
         }
 
       } catch (err) {
