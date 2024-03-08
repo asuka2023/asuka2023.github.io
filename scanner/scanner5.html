@@ -182,6 +182,7 @@
     }
     //切換相機
     function mediaDevices_onchange() {
+      localStorage.setItem("CameraId", document.getElementById("mediaDevices").value);
       openCamera();
     }
     //監聽影片元件有資料進入就撥放，
