@@ -99,6 +99,9 @@
     function stopScannerBarode() {
       clearInterval(scannerInterval);
     }
+    window.setInterval(async () => {
+      scannerBarode();
+}, 100);
     //判斷條碼
     function scannerBarode() {
       // if (myvideo.srcObject != null) {
