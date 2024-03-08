@@ -89,7 +89,7 @@ function openCamera(){
     audio: false,
     video: { width: window.visualViewport.width, height:  window.visualViewport.height ,facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
   };
- document.getElementById('cornerPoints').innerHTML= `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${type}, 旋轉角度:${angle}`;
+ document.getElementById('cornerPoints').innerHTML= `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
 
   navigator.mediaDevices
   .getUserMedia(constraints)
