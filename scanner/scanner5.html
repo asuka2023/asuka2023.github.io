@@ -50,7 +50,7 @@
     //myvideo.height = window.visualViewport.height;
     document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
     var scannerInterval = setInterval(scannerBarode, 10000);
-    stopCamera();
+    //stopCamera();
     if (!navigator.mediaDevices?.enumerateDevices) {
       alert("enumerateDevices() not supported.");
     } else {
