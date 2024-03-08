@@ -71,6 +71,11 @@
           });
           //相機選單必須要有一個鏡頭以上
           if (sel.length > 0) {
+            var selectcamera = localStorage.getItem("CameraId");
+            if(selectcamera != ''){
+              sel.value = selectcamera;
+            }
+            
             // 檢查瀏覽器相容性
             if (!("BarcodeDetector" in globalThis)) {
               console.log("此瀏覽器不支援條碼掃描。");
