@@ -2,28 +2,21 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
+<style>
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  font-family: Arial;
-  font-size: 17px;
 }
 
 #myVideo {
   position: fixed;
   top: 0;
   left: 0;
-}
-
-#videoCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  background: rgba(0, 0, 0, 0);	
+   width: 100%;
+   height: 100%;	
 }
 
 .content {
@@ -38,31 +31,18 @@ body {
 </style>
 </head>
 <body>
-<video  id="myVideo" style="display: none"></video>
-<canvas id="videoCanvas"></canvas>
+
+<video  id="myVideo"  ></video>
 <div class="content">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
 </div>
 
 <script>
-screen.orientation.lock("landscape-primary");	
-screen.orientation
-    .lock("landscape")
-    .then(() => {
-	      alert( `Locked to ${oppositeOrientation}\n`);
-
-    })
-    .catch((error) => {
-	      alert(`${error}\n`);
-
-    });
 const myvideo = document.getElementById('myVideo');
-const videocanvas = document.getElementById('videoCanvas');
-videocanvas.width = window.visualViewport.width;
-videocanvas.height = window.visualViewport.height;
-document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${videocanvas.width},${videocanvas.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
 
+document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
+	
 // 檢查瀏覽器相容性
 if (!("BarcodeDetector" in globalThis)) {
   console.log("此瀏覽器不支援條碼掃描。");
@@ -74,51 +54,23 @@ if (!("BarcodeDetector" in globalThis)) {
   const barcodeDetector = new BarcodeDetector({
     formats: ["code_128","qr_code"],
   });
-    // Prefer camera resolution nearest to 1280x720.
-const constraints = {
-  audio: false,
-  video: {facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
-};
 	
-
-navigator.mediaDevices
-  .getUserMedia(constraints)
-  .then((mediaStream) => {
-    myvideo.srcObject = mediaStream;
-    myvideo.onloadedmetadata = () => {
-      myvideo.play();
-	   setTimeout(drawImge , 300);
-    };
-
-  })
-  .catch((err) => {
-    console.error(`${err.name}: ${err.message}`);
-    document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
-  });
-
+  openCamera();
 window.setInterval(async () => {
-  
-}, 100);
-
-function drawImge(){
-    var ctx = videocanvas.getContext('2d');
-    ctx.clearRect(0, 0, videocanvas.width, videocanvas.height);  
-    ctx.drawImage(myvideo, 0, 0, videocanvas.width, videocanvas.height);
-    barcodeDetector
+    	barcodeDetector
 	  .detect(myvideo)
 	  .then((barcodes) => {
-	 
+	  
 	    var cornerPoints = '';
 	    var result = '';
 		barcodes.forEach((barcode)  => {
-			
 			console.log(barcode.rawValue);
 			 result += ` ${barcode.rawValue}, `;
 			 //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-			    ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-			    ctx.lineWidth = "6";
-			    ctx.strokeStyle = "green";    
-			    ctx.stroke();
+			   // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
+			    //ctx.lineWidth = "6";
+			   // ctx.strokeStyle = "red";    
+			    //ctx.stroke();
 		});
 		document.getElementById('message').innerHTML= `條碼:${result} `;
 		//document.getElementById('cornerPoints').innerHTML= cornerPoints;
@@ -127,20 +79,45 @@ function drawImge(){
 	  .catch((err) => {
 		console.log(err);
 	  });
-    setTimeout(drawImge , 100);
+}, 100);
 }
-}
+function openCamera(){
+ 
+  // Prefer camera resolution nearest to 1280x720.
+  var constraints = {
+    audio: false,
+    video: { facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
+  };
+ document.getElementById('cornerPoints').innerHTML= `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
 
+  navigator.mediaDevices
+  .getUserMedia(constraints)
+  .then(openCameraSuccess)
+  .catch(openCameraError);
+}
+function openCameraSuccess(mediaStream){ 
+    myvideo.pause();
+    myvideo.srcObject = mediaStream;
+  
+}
+function openCameraError(err){ 
+    console.error(`${err.name}: ${err.message}`);
+    document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
+}
+myvideo.addEventListener("loadedmetadata", (event) => {
+  myvideo.play();
+});
 visualViewport.addEventListener('resize', () => {
-   videocanvas.width = window.visualViewport.width;
-   videocanvas.height = window.visualViewport.height;
-document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${videocanvas.width},${videocanvas.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
+   //myvideo.width = window.visualViewport.width;
+  // myvideo.height = window.visualViewport.height;
+   openCamera();	
+ // document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
 });
 screen.orientation.addEventListener("change", (event) => {
   const type = event.target.type;
   const angle = event.target.angle;
-  
-  document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${videocanvas.width},${videocanvas.height}],螢幕方向: ${type}, 旋轉角度:${angle}`;
+  openCamera();
+  //document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${type}, 旋轉角度:${angle}`;
 });
 </script>
 </body>
