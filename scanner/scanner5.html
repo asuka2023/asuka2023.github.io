@@ -54,65 +54,66 @@
     } else {
       var sel = document.getElementById('mediaDevices');
       var opt = null;
-      try {
-        let devices = await navigator.mediaDevices.enumerateDevices();
-        devices.forEach((device) => {
-          if (device.kind == "videoinput") {
-            opt = document.createElement('option');
-            opt.value = device.deviceId;
-            opt.innerHTML = device.label;
-            sel.appendChild(opt);
+
+      navigator.mediaDevices
+        .enumerateDevices()
+        .then((devices) => {
+          devices.forEach((device) => {
+            //只要相機設備
+            if (device.kind == "videoinput") {
+              opt = document.createElement('option');
+              opt.value = device.deviceId;
+              opt.innerHTML = device.label;
+              sel.appendChild(opt);
+            }
+          });
+          //相機選單必須要有一個鏡頭以上
+          if (sel.length > 0) {
+            // 檢查瀏覽器相容性
+            if (!("BarcodeDetector" in globalThis)) {
+              console.log("此瀏覽器不支援條碼掃描。");
+              document.getElementById('message').innerHTML = '此瀏覽器不支援條碼掃描';
+            } else {
+              console.log("此瀏覽器支援條碼掃描");
+              document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
+              // 建立條碼種類
+              const barcodeDetector = new BarcodeDetector({
+                formats: ["code_128", "qr_code"],
+              });
+            }
           }
+        })
+        .catch((err) => {
+          console.error(`${err.name}: ${err.message}`);
+          alert(`${err.name}: ${err.message}`);
         });
-        if (sel.length > 0) {
-          // 檢查瀏覽器相容性
-          if (!("BarcodeDetector" in globalThis)) {
-            console.log("此瀏覽器不支援條碼掃描。");
-            document.getElementById('message').innerHTML = '此瀏覽器不支援條碼掃描';
-          } else {
-            console.log("此瀏覽器支援條碼掃描");
-            document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
-            // 建立條碼種類
-            const barcodeDetector = new BarcodeDetector({
-              formats: ["code_128", "qr_code"],
-            });
-
-            window.setInterval(async () => {
-              barcodeDetector
-                .detect(myvideo)
-                .then((barcodes) => {
-
-                  var cornerPoints = '';
-                  var result = '';
-                  barcodes.forEach((barcode) => {
-                    console.log(barcode.rawValue);
-                    result += ` ${barcode.rawValue}, `;
-                    //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-                    // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-                    //ctx.lineWidth = "6";
-                    // ctx.strokeStyle = "red";    
-                    //ctx.stroke();
-                  });
-                  //document.getElementById('message').innerHTML= `條碼:${result} `;
-                  //document.getElementById('cornerPoints').innerHTML= cornerPoints;
-                  //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            }, 100);
-          }
-        }
-      } catch (err) {
-        console.error(`${err.name}: ${err.message}`);
-        alert(`${err.name}: ${err.message}`);
-      }
-
-
-
     }
-
-
+    //判斷條碼
+    function scannerBarode() {
+      barcodeDetector
+        .detect(myvideo)
+        .then((barcodes) => {
+          var cornerPoints = '';
+          var result = '';
+          barcodes.forEach((barcode) => {
+            console.log(barcode.rawValue);
+            result += ` ${barcode.rawValue}, `;
+            //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
+            // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
+            //ctx.lineWidth = "6";
+            // ctx.strokeStyle = "red";    
+            //ctx.stroke();
+          });
+          //document.getElementById('message').innerHTML= `條碼:${result} `;
+          //document.getElementById('cornerPoints').innerHTML= cornerPoints;
+          //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+          setTimeout(scannerBarode, 100);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+    //開啟相機
     function openCamera() {
 
       // Prefer camera resolution nearest to 1280x720.
@@ -127,28 +128,34 @@
         .then(openCameraSuccess)
         .catch(openCameraError);
     }
+    //開啟相機成功
     function openCameraSuccess(mediaStream) {
       myvideo.pause();
       myvideo.srcObject = mediaStream;
 
     }
+    //開啟相機失敗
     function openCameraError(err) {
       console.error(`${err.name}: ${err.message}`);
       document.getElementById('message').innerHTML = `${err.name}: ${err.message}`;
     }
+    //切換相機
     function mediaDevices_onchange() {
       myvideo.pause();
       openCamera();
     }
+    //監聽影片元件有資料進入就撥放，
     myvideo.addEventListener("loadedmetadata", (event) => {
       myvideo.play();
     });
+    //監聽瀏覽器尺寸大小
     visualViewport.addEventListener('resize', () => {
       //myvideo.width = window.visualViewport.width;
       //myvideo.height = window.visualViewport.height;
       openCamera();
       // document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
     });
+    //監聽瀏覽器螢幕方向
     screen.orientation.addEventListener("change", (event) => {
       const type = event.target.type;
       const angle = event.target.angle;
