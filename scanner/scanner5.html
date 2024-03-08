@@ -44,10 +44,7 @@
   </div>
 
   <script>
-    // 建立條碼種類
-    const barcodeDetector = new BarcodeDetector({
-      formats: ["code_128", "qr_code"],
-    });
+    var barcodeDetector = null;
     const myvideo = document.getElementById('myVideo');
     //myvideo.width = window.visualViewport.width;
     //myvideo.height = window.visualViewport.height;
@@ -81,7 +78,10 @@
             } else {
               console.log("此瀏覽器支援條碼掃描");
               document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
-
+             // 建立條碼種類
+             barcodeDetector = new BarcodeDetector({
+                  formats: ["code_128", "qr_code"],
+                });
               openCamera();
             }
           }
@@ -102,7 +102,8 @@
 
     //判斷條碼
     function scannerBarode() {
-      if (myvideo.srcObject != null) {
+      if (myvideo.srcObject != null && barcodeDetector != null) {
+       
         barcodeDetector
           .detect(myvideo)
           .then((barcodes) => {
@@ -130,6 +131,7 @@
       }
 
     }
+    
     //開啟相機
     function openCamera() {
       stopCamera();
