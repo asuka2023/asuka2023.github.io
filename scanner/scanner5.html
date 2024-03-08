@@ -1,156 +1,161 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-* {
-  box-sizing: border-box;
-}
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  font-family: Arial;
-  font-size: 17px;
-}
+    body {
+      margin: 0;
+      font-family: Arial;
+      font-size: 17px;
+    }
 
-#myVideo {
-  position: fixed;
-  top: 0;
-  left: 0;
- min-width: 100%; 
-  min-height: 100%;	
-}
+    #myVideo {
+      position: fixed;
+      top: 0;
+      left: 0;
+      min-width: 100%;
+      min-height: 100%;
+    }
 
-.content {
-  position: fixed;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  color: #f1f1f1;
-  width: 100%;
-  padding: 20px;
-}
-
-</style>
+    .content {
+      position: fixed;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      color: #f1f1f1;
+      width: 100%;
+      padding: 20px;
+    }
+  </style>
 </head>
+
 <body>
 
-<video  id="myVideo"  ></video>
-<div class="content">
+  <video id="myVideo"></video>
+  <div class="content">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
-    <p>設備:<select id="mediaDevices"  onchange="mediaDevices_onchange()"></select><p>
-</div>
+    <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select>
+    <p>
+  </div>
 
-<script>
-if (!navigator.mediaDevices?.enumerateDevices) {
-	alert("enumerateDevices() not supported.");
-} else {
-  var sel = document.getElementById('mediaDevices');
-  var opt = null;
+  <script>
+    const myvideo = document.getElementById('myVideo');
+    //myvideo.width = window.visualViewport.width;
+    //myvideo.height = window.visualViewport.height;
+    document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
 
-  // List cameras and microphones.
-  navigator.mediaDevices
-    .enumerateDevices()
-    .then((devices) => {
-      devices.forEach((device) => {  
-	    if(device.kind == "videoinput"){
-	            opt = document.createElement('option');
-		    opt.value = device.deviceId;
-		    opt.innerHTML = device.label;
-		    sel.appendChild(opt);
-	    }
-	  
-        console.log(`${device.kind}: ${device.label} id = ${device.deviceId}`);
-      });
-    })
-    .catch((err) => {
+    if (!navigator.mediaDevices?.enumerateDevices) {
+      alert("enumerateDevices() not supported.");
+    } else {
+      var sel = document.getElementById('mediaDevices');
+      var opt = null;
+      try {
+        let devices = await navigator.mediaDevices.enumerateDevices();
+        devices.forEach((device) => {
+          if (device.kind == "videoinput") {
+            opt = document.createElement('option');
+            opt.value = device.deviceId;
+            opt.innerHTML = device.label;
+            sel.appendChild(opt);
+          }
+        });
+        if (sel.length > 0) {
+          // 檢查瀏覽器相容性
+          if (!("BarcodeDetector" in globalThis)) {
+            console.log("此瀏覽器不支援條碼掃描。");
+            document.getElementById('message').innerHTML = '此瀏覽器不支援條碼掃描';
+          } else {
+            console.log("此瀏覽器支援條碼掃描");
+            document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
+            // 建立條碼種類
+            const barcodeDetector = new BarcodeDetector({
+              formats: ["code_128", "qr_code"],
+            });
+
+            window.setInterval(async () => {
+              barcodeDetector
+                .detect(myvideo)
+                .then((barcodes) => {
+
+                  var cornerPoints = '';
+                  var result = '';
+                  barcodes.forEach((barcode) => {
+                    console.log(barcode.rawValue);
+                    result += ` ${barcode.rawValue}, `;
+                    //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
+                    // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
+                    //ctx.lineWidth = "6";
+                    // ctx.strokeStyle = "red";    
+                    //ctx.stroke();
+                  });
+                  //document.getElementById('message').innerHTML= `條碼:${result} `;
+                  //document.getElementById('cornerPoints').innerHTML= cornerPoints;
+                  //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+                })
+                .catch((err) => {
+                  console.log(err);
+                });
+            }, 100);
+          }
+        }
+      } catch (err) {
+        console.error(`${err.name}: ${err.message}`);
+        alert(`${err.name}: ${err.message}`);
+      }
+
+
+
+    }
+
+
+    function openCamera() {
+
+      // Prefer camera resolution nearest to 1280x720.
+      var constraints = {
+        audio: false,
+        video: { width: window.visualViewport.width, height: window.visualViewport.height, facingMode: "environment", frameRate: { min: 10, max: 30 }, deviceId: document.getElementById("mediaDevices").value, },
+      };
+      document.getElementById('cornerPoints').innerHTML = `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
+
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then(openCameraSuccess)
+        .catch(openCameraError);
+    }
+    function openCameraSuccess(mediaStream) {
+      myvideo.pause();
+      myvideo.srcObject = mediaStream;
+
+    }
+    function openCameraError(err) {
       console.error(`${err.name}: ${err.message}`);
+      document.getElementById('message').innerHTML = `${err.name}: ${err.message}`;
+    }
+    function mediaDevices_onchange() {
+      myvideo.pause();
+      openCamera();
+    }
+    myvideo.addEventListener("loadedmetadata", (event) => {
+      myvideo.play();
     });
-}
-const myvideo = document.getElementById('myVideo');
-//myvideo.width = window.visualViewport.width;
-//myvideo.height = window.visualViewport.height;
-document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
-	
-// 檢查瀏覽器相容性
-if (!("BarcodeDetector" in globalThis)) {
-  console.log("此瀏覽器不支援條碼掃描。");
-  document.getElementById('message').innerHTML='此瀏覽器不支援條碼掃描';
-} else {
-  console.log("此瀏覽器支援條碼掃描");
-  document.getElementById('message').innerHTML='此瀏覽器支援條碼掃描';
-  // 建立條碼種類
-  const barcodeDetector = new BarcodeDetector({
-    formats: ["code_128","qr_code"],
-  });
-  
-window.setInterval(async () => {
-    	barcodeDetector
-	  .detect(myvideo)
-	  .then((barcodes) => {
-	  
-	    var cornerPoints = '';
-	    var result = '';
-		barcodes.forEach((barcode)  => {
-			console.log(barcode.rawValue);
-			 result += ` ${barcode.rawValue}, `;
-			 //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-			   // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-			    //ctx.lineWidth = "6";
-			   // ctx.strokeStyle = "red";    
-			    //ctx.stroke();
-		});
-		//document.getElementById('message').innerHTML= `條碼:${result} `;
-		//document.getElementById('cornerPoints').innerHTML= cornerPoints;
-		//document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
-	  })
-	  .catch((err) => {
-		console.log(err);
-	  });
-}, 100);
-}
-function openCamera(){
- 
-  // Prefer camera resolution nearest to 1280x720.
-  var constraints = {
-    audio: false,
-    video: { width: window.visualViewport.width, height:  window.visualViewport.height ,facingMode:  "environment" ,frameRate: { min: 10, max: 30 },deviceId: document.getElementById("mediaDevices").value, },
-  };
- document.getElementById('cornerPoints').innerHTML= `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
-
-  navigator.mediaDevices
-  .getUserMedia(constraints)
-  .then(openCameraSuccess)
-  .catch(openCameraError);
-}
-function openCameraSuccess(mediaStream){ 
-    myvideo.pause();
-    myvideo.srcObject = mediaStream;
-  
-}
-function openCameraError(err){ 
-    console.error(`${err.name}: ${err.message}`);
-    document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
-}
-function mediaDevices_onchange() {
-	 myvideo.pause();
- 	openCamera();
-}
-myvideo.addEventListener("loadedmetadata", (event) => {
-  myvideo.play();
-});
-visualViewport.addEventListener('resize', () => {
-   //myvideo.width = window.visualViewport.width;
-   //myvideo.height = window.visualViewport.height;
-   openCamera();	
- // document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
-});
-screen.orientation.addEventListener("change", (event) => {
-  const type = event.target.type;
-  const angle = event.target.angle;
-  openCamera();
-  //document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${type}, 旋轉角度:${angle}`;
-});
-</script>
+    visualViewport.addEventListener('resize', () => {
+      //myvideo.width = window.visualViewport.width;
+      //myvideo.height = window.visualViewport.height;
+      openCamera();
+      // document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
+    });
+    screen.orientation.addEventListener("change", (event) => {
+      const type = event.target.type;
+      const angle = event.target.angle;
+      openCamera();
+      //document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${type}, 旋轉角度:${angle}`;
+    });
+  </script>
 </body>
+
 </html>
