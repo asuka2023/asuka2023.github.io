@@ -130,7 +130,7 @@
     }
     //開啟相機成功
     function openCameraSuccess(mediaStream) {
-
+      alert('openCamera');
       myvideo.srcObject = mediaStream;
 
     }
@@ -149,6 +149,7 @@
       });
 
       myvideo.srcObject = null;
+      alert('stopCamera');
     }
     //切換相機
     function mediaDevices_onchange() {
