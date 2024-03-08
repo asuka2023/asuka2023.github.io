@@ -38,7 +38,7 @@ body {
 <div class="content">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
-    <p>設備:<select id="mediaDevices"></select><p>
+    <p>設備:<select id="mediaDevices"  onchange="mediaDevices_onchange()"></select><p>
 </div>
 
 <script>
@@ -83,7 +83,7 @@ if (!("BarcodeDetector" in globalThis)) {
   const barcodeDetector = new BarcodeDetector({
     formats: ["code_128","qr_code"],
   });
-  openCamera();
+  
 window.setInterval(async () => {
     	barcodeDetector
 	  .detect(myvideo)
@@ -114,7 +114,7 @@ function openCamera(){
   // Prefer camera resolution nearest to 1280x720.
   var constraints = {
     audio: false,
-    video: { width: window.visualViewport.width, height:  window.visualViewport.height ,facingMode:  "environment" ,frameRate: { min: 10, max: 30 } },
+    video: { width: window.visualViewport.width, height:  window.visualViewport.height ,facingMode:  "environment" ,frameRate: { min: 10, max: 30 },deviceId: document.getElementById("mediaDevices").value, },
   };
  document.getElementById('cornerPoints').innerHTML= `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
 
@@ -131,6 +131,9 @@ function openCameraSuccess(mediaStream){
 function openCameraError(err){ 
     console.error(`${err.name}: ${err.message}`);
     document.getElementById('message').innerHTML=`${err.name}: ${err.message}`;
+}
+function mediaDevices_onchange() {
+ 	openCamera();
 }
 myvideo.addEventListener("loadedmetadata", (event) => {
   myvideo.play();
