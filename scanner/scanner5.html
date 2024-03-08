@@ -115,7 +115,7 @@
     }
     //開啟相機
     function openCamera() {
-
+      stopCamera();
       // Prefer camera resolution nearest to 1280x720.
       var constraints = {
         audio: false,
@@ -139,9 +139,19 @@
       console.error(`${err.name}: ${err.message}`);
       document.getElementById('message').innerHTML = `${err.name}: ${err.message}`;
     }
+    //關閉相機串流
+    function stopCamera() {
+      const stream = myvideo.srcObject;
+      const tracks = stream.getTracks();
+
+      tracks.forEach((track) => {
+        track.stop();
+      });
+
+      myvideo.srcObject = null;
+    }
     //切換相機
     function mediaDevices_onchange() {
-      myvideo.pause();
       openCamera();
     }
     //監聽影片元件有資料進入就撥放，
