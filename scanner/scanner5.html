@@ -44,13 +44,16 @@
   </div>
 
   <script>
-
+    // 建立條碼種類
+    const barcodeDetector = new BarcodeDetector({
+      formats: ["code_128", "qr_code"],
+    });
     const myvideo = document.getElementById('myVideo');
     //myvideo.width = window.visualViewport.width;
     //myvideo.height = window.visualViewport.height;
     document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
     var scannerInterval = setInterval(scannerBarode, 10000);
-    //stopCamera();
+    stopCamera();
     if (!navigator.mediaDevices?.enumerateDevices) {
       alert("enumerateDevices() not supported.");
     } else {
@@ -78,10 +81,7 @@
             } else {
               console.log("此瀏覽器支援條碼掃描");
               document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
-              // 建立條碼種類
-              const barcodeDetector = new BarcodeDetector({
-                formats: ["code_128", "qr_code"],
-              });
+
               openCamera();
             }
           }
@@ -99,37 +99,35 @@
     function stopScannerBarode() {
       clearInterval(scannerInterval);
     }
-    window.setInterval(async () => {
-      scannerBarode();
-}, 100);
+
     //判斷條碼
     function scannerBarode() {
-      // if (myvideo.srcObject != null) {
-      barcodeDetector
-        .detect(myvideo)
-        .then((barcodes) => {
-          var cornerPoints = '';
-          var result = '';
-          barcodes.forEach((barcode) => {
-            console.log(barcode.rawValue);
-            result += ` ${barcode.rawValue}, `;
-            //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-            // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-            //ctx.lineWidth = "6";
-            // ctx.strokeStyle = "red";    
-            //ctx.stroke();
-          });
-          document.getElementById('message').innerHTML = `條碼:${result} `;
-          //document.getElementById('cornerPoints').innerHTML= cornerPoints;
-          //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+      if (myvideo.srcObject != null) {
+        barcodeDetector
+          .detect(myvideo)
+          .then((barcodes) => {
+            var cornerPoints = '';
+            var result = '';
+            barcodes.forEach((barcode) => {
+              console.log(barcode.rawValue);
+              result += ` ${barcode.rawValue}, `;
+              //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
+              // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
+              //ctx.lineWidth = "6";
+              // ctx.strokeStyle = "red";    
+              //ctx.stroke();
+            });
+            document.getElementById('message').innerHTML = `條碼:${result} `;
+            //document.getElementById('cornerPoints').innerHTML= cornerPoints;
+            //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
 
-        })
-        .catch((err) => {
-          console.log(err);
-          alert(err);
-          stopScannerBarode();
-        });
-      //}
+          })
+          .catch((err) => {
+            console.log(err);
+            alert(err);
+            stopScannerBarode();
+          });
+      }
 
     }
     //開啟相機
