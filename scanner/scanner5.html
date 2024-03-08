@@ -38,9 +38,35 @@ body {
 <div class="content">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
+    <p>設備:<select id="mediaDevices"></select><p>
 </div>
 
 <script>
+if (!navigator.mediaDevices?.enumerateDevices) {
+	alert("enumerateDevices() not supported.");
+} else {
+  var sel = document.getElementById('mediaDevices');
+  var opt = null;
+
+  // List cameras and microphones.
+  navigator.mediaDevices
+    .enumerateDevices()
+    .then((devices) => {
+      devices.forEach((device) => {  
+	    if(device.kind == "videoinput"){
+	            opt = document.createElement('option');
+		    opt.value = device.deviceId;
+		    opt.innerHTML = device.label;
+		    sel.appendChild(opt);
+	    }
+	  
+        console.log(`${device.kind}: ${device.label} id = ${device.deviceId}`);
+      });
+    })
+    .catch((err) => {
+      console.error(`${err.name}: ${err.message}`);
+    });
+}
 const myvideo = document.getElementById('myVideo');
 //myvideo.width = window.visualViewport.width;
 //myvideo.height = window.visualViewport.height;
