@@ -101,32 +101,32 @@
     }
     //判斷條碼
     function scannerBarode() {
-      if (myvideo.srcObject != null) {
-        barcodeDetector
-          .detect(myvideo)
-          .then((barcodes) => {
-            var cornerPoints = '';
-            var result = '';
-            barcodes.forEach((barcode) => {
-              console.log(barcode.rawValue);
-              result += ` ${barcode.rawValue}, `;
-              //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-              // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-              //ctx.lineWidth = "6";
-              // ctx.strokeStyle = "red";    
-              //ctx.stroke();
-            });
-            document.getElementById('message').innerHTML = `條碼:${result} `;
-            //document.getElementById('cornerPoints').innerHTML= cornerPoints;
-            //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
-
-          })
-          .catch((err) => {
-            console.log(err);
-           alert(err);
-            stopScannerBarode();
+      // if (myvideo.srcObject != null) {
+      barcodeDetector
+        .detect(myvideo)
+        .then((barcodes) => {
+          var cornerPoints = '';
+          var result = '';
+          barcodes.forEach((barcode) => {
+            console.log(barcode.rawValue);
+            result += ` ${barcode.rawValue}, `;
+            //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
+            // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
+            //ctx.lineWidth = "6";
+            // ctx.strokeStyle = "red";    
+            //ctx.stroke();
           });
-      }
+          document.getElementById('message').innerHTML = `條碼:${result} `;
+          //document.getElementById('cornerPoints').innerHTML= cornerPoints;
+          //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+
+        })
+        .catch((err) => {
+          console.log(err);
+          alert(err);
+          stopScannerBarode();
+        });
+      //}
 
     }
     //開啟相機
