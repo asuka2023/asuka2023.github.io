@@ -87,36 +87,11 @@
                 formats: ["code_128", "qr_code"],
               });
               openCamera();
+              /*
               setInterval(function () {
-                barcodeDetector
-                  .detect(mycanvas)
-                  .then((barcodes) => {
-                    var cornerPoints = '';
-                    var result = '';
-                    var ctx = mycanvas.getContext('2d');
-
-                    //計算比例。因為條碼的點位是鏡頭尺寸的座標，必須轉換為螢幕的座標
-                    // var xscale = myvideo.offsetWidth / myvideo.videoWidth;
-                    //var yscale = myvideo.offsetHeight / myvideo.videoHeight;
-                    barcodes.forEach((barcode) => {
-                      console.log(barcode.rawValue);
-                      result += ` ${barcode.rawValue}, `;
-                      cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
-                      //  cornerPoints += ` [${barcode.boundingBox.x * xscale}, ${barcode.boundingBox.y * yscale},${barcode.boundingBox.width * xscale},${barcode.boundingBox.height * yscale}]  `;
-                        cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
-                       ctx.rect(barcode.boundingBox.x , barcode.boundingBox.y , barcode.boundingBox.width , barcode.boundingBox.height );
-                       ctx.lineWidth = "6";
-                       ctx.strokeStyle = "red";
-                       ctx.stroke();
-                    });
-                    document.getElementById('message').innerHTML = `條碼:${result} `;
-                    document.getElementById('cornerPoints').innerHTML = cornerPoints;
-                    //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
+              
               }, 100);
+              */
             }
           }
         })
@@ -195,7 +170,28 @@
         mycanvas.width = myvideo.videoWidth;
         mycanvas.height = myvideo.videoHeight;
         ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
-
+        barcodeDetector
+                  .detect(mycanvas)
+                  .then((barcodes) => {
+                    var cornerPoints = '';
+                    var result = '';
+                    barcodes.forEach((barcode) => {
+                      console.log(barcode.rawValue);
+                      result += ` ${barcode.rawValue}, `;
+                      cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
+                      cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
+                       ctx.rect(barcode.boundingBox.x , barcode.boundingBox.y , barcode.boundingBox.width , barcode.boundingBox.height );
+                       ctx.lineWidth = "6";
+                       ctx.strokeStyle = "red";
+                       ctx.stroke();
+                    });
+                    document.getElementById('message').innerHTML = `條碼:${result} `;
+                    document.getElementById('cornerPoints').innerHTML = cornerPoints;
+                    //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
       }
       else {
         mycanvas.width = window.visualViewport.width;
