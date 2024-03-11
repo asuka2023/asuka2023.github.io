@@ -181,7 +181,7 @@
           scannerw.max = mycanvas.width;
           if (scannerh.value > mycanvas.height) {
             scannerh.value = mycanvas.height;
-            scannerhvalue();
+            showscannerhvalue();
           }
           scannerh.max = mycanvas.height;
 
@@ -251,7 +251,7 @@
 
     }
     //顯示掃描區域長度數值
-    function scannerhvalue() {
+    function showscannerhvalue() {
       scannerhvalue.innerHTML = scannerh.value;
     }
     //當使用者移動掃描區域寬度
@@ -260,7 +260,7 @@
     });
     //當使用者移動掃描區域高度
     scannerw.addEventListener("oninput", (event) => {
-      scannerhvalue();
+      showscannerhvalue();
     });
     //監聽影片元件有資料進入就撥放，
     myvideo.addEventListener("loadedmetadata", (event) => {
