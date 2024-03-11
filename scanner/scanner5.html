@@ -238,6 +238,7 @@ cornerPoints += `,[${myvideo.offsetWidth},${myvideo.offsetHeight}],[${myvideo.vi
  try {
    
         const stream = myvideo.srcObject;
+	 alert(stream != null);
         if (stream != null) {
 		const track = stream.getVideoTracks()[0];
 var capabilities = track.getCapabilities();
