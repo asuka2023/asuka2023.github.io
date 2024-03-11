@@ -216,15 +216,19 @@
             .then((barcodes) => {
               var cornerPoints = '';
               var result = '';
+             ctx.rect(scannerx, scannery, scannerw.value, scannerh.value);  
+              ctx.lineWidth = "6";
+              ctx.strokeStyle = "white";
               barcodes.forEach((barcode) => {
                 result += ` ${barcode.rawValue}, `;
                 cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
                 cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
-                ctx.rect(barcode.boundingBox.x, barcode.boundingBox.y, barcode.boundingBox.width, barcode.boundingBox.height);
-                ctx.lineWidth = "6";
-                ctx.strokeStyle = "red";
-                ctx.stroke();
+               
+             
+                ctx.strokeStyle = "green";
+                
               });
+              ctx.stroke();
               document.getElementById('message').innerHTML = `條碼:${result} `;
               document.getElementById('cornerPoints').innerHTML = cornerPoints;
               //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
