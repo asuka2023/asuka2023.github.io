@@ -50,18 +50,10 @@
   <script>
     var scannerw = document.getElementById("scannerW");
     var scannerwvalue = document.getElementById("scannerWvalue");
-    scannerwvalue.innerHTML = scannerw.value;
-
-    scannerw.oninput = function () {
-      scannerwvalue.innerHTML = this.value;
-    }
+    showscannerwvalue();
     var scannerh = document.getElementById("scannerH");
     var scannerhvalue = document.getElementById("scannerHvalue");
-    scannerhvalue.innerHTML = scannerh.value;
-
-    scannerh.oninput = function () {
-      scannerhvalue.innerHTML = this.value;
-    }
+    showscannerhvalue();
     const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
     const btn = document.querySelector('.switch');
@@ -101,11 +93,7 @@
               document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
 
               openCamera();
-              /*
-              setInterval(function () {
-              
-              }, 100);
-              */
+
             }
           }
         })
@@ -165,18 +153,19 @@
       switch (screen.orientation.type) {
         case "landscape-primary":
         case "landscape-secondary":
-             mycanvas.style.width = "auto";
-             mycanvas.style.height = "100%";
+          mycanvas.style.width = "auto";
+          mycanvas.style.height = "100%";
           break;
         case "portrait-secondary":
         case "portrait-primary":
-            mycanvas.style.width = "100%";
-            mycanvas.style.height = "auto";
+          mycanvas.style.width = "100%";
+          mycanvas.style.height = "auto";
           break;
         default:
           console.log("The orientation API isn't supported in this browser :(");
       }
     }
+    //渲染畫面
     function drawImge() {
       try {
         const stream = myvideo.srcObject;
@@ -184,18 +173,18 @@
           var ctx = mycanvas.getContext('2d');
 
           mycanvas.width = myvideo.videoWidth;
-          mycanvas.height = myvideo.videoHeight; 
+          mycanvas.height = myvideo.videoHeight;
           if (scannerw.value > mycanvas.width) {
             scannerw.value = mycanvas.width;
-            scannerwvalue.innerHTML = scannerw.value;
+            showscannerwvalue();
           }
           scannerw.max = mycanvas.width;
-         if (scannerh.value > mycanvas.height) {
+          if (scannerh.value > mycanvas.height) {
             scannerh.value = mycanvas.height;
-            scannerhvalue.innerHTML = scannerh.value;
+            scannerhvalue();
           }
           scannerh.max = mycanvas.height;
-          
+
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
           var scannerx = (mycanvas.width - scannerw.value) / 2;
           var scannery = (mycanvas.height - scannerh.value) / 2;
@@ -209,19 +198,22 @@
           ctx.globalAlpha = 0.5;
           ctx.fillStyle = "black";
           ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
+          //擷取出要掃描的區域
           const myImageData = ctx.getImageData(scannerx, scannery, scannerw.value, scannerh.value);
           // 建立條碼種類
           var barcodeDetector = new BarcodeDetector({
             formats: ["code_128", "qr_code"],
           });
+          //檢測條碼
           barcodeDetector
             .detect(myImageData)
             .then((barcodes) => {
               var cornerPoints = '';
               var result = '';
-             ctx.rect(scannerx, scannery, scannerw.value, scannerh.value);  
+              ctx.rect(scannerx, scannery, scannerw.value, scannerh.value);
               ctx.lineWidth = "6";
               ctx.strokeStyle = "white";
+              //當檢測出符合條碼的種類邊框變綠色
               barcodes.forEach((barcode) => {
                 result += ` ${barcode.rawValue}, `;
                 cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
@@ -252,6 +244,23 @@
 
 
     }
+    //顯示掃描區域寬度數值
+    function showscannerwvalue() {
+      scannerwvalue.innerHTML = scannerw.value;
+
+    }
+    //顯示掃描區域長度數值
+    function scannerhvalue() {
+      scannerhvalue.innerHTML = scannerh.value;
+    }
+    //當使用者移動掃描區域寬度
+    scannerw.addEventListener("oninput", (event) => {
+      showscannerwvalue();
+    });
+    //當使用者移動掃描區域高度
+    scannerw.addEventListener("oninput", (event) => {
+      scannerhvalue();
+    });
     //監聽影片元件有資料進入就撥放，
     myvideo.addEventListener("loadedmetadata", (event) => {
       myvideo.play();
