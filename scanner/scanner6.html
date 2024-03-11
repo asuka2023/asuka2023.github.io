@@ -269,11 +269,17 @@
     }
     //儲存掃描區域寬度數值
     function setscannerwvalue() {
-      localStorage.setItem("ScannerW", scannerw.value);
+      if(scannerw.max > 100){
+           localStorage.setItem("ScannerW", scannerw.value);
+      }
+   
     }
     //儲存掃描區域長度數值
     function setscannerhvalue() {
-      localStorage.setItem("ScannerH", scannerh.value);
+      if(scannerh.max > 100){
+           localStorage.setItem("ScannerH", scannerh.value);
+      }
+   
     }
     //顯示掃描區域寬度數值
     function showscannerwvalue() {
@@ -300,6 +306,7 @@
 
 
     });
+ 
     //監聽瀏覽器螢幕方向
     screen.orientation.addEventListener("change", (event) => {
       screen_orientation();
