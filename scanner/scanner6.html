@@ -45,12 +45,19 @@
     }
 
     .btnsetting {
-      position: fixed;
-      left: 0;
-      bottom: 0;
+    
       background-color: #e7e7e7;
       color: black;
     }
+
+    #divbottom {
+      position: fixed;
+      bottom: 0px;
+      width: 100%;
+      padding: 20px;
+     
+    }
+
   </style>
 
 
@@ -60,7 +67,10 @@
 
   <video id="myVideo" style="display: none"></video>
   <canvas id="myCanvas"></canvas>
-  <p><button type="button" id="setting" class="button btnsetting">設定</button> 條碼:<span id="barcodeValue"></span></p>
+  <div id="divbottom">
+    <p><button type="button" id="setting" class="button btnsetting">設定</button> 條碼:<span id="barcodeValue"></span></p>
+  </div>
+  
   <div class="content" style="display: none">
     <p>訊息:<span id="message"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
