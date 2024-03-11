@@ -164,7 +164,8 @@
       }
     }
     function drawImge() {
-      const stream = myvideo.srcObject;
+      try{
+        const stream = myvideo.srcObject;
       if (stream != null) {
         var ctx = mycanvas.getContext('2d');
         mycanvas.width = myvideo.videoWidth;
@@ -176,7 +177,6 @@
                     var cornerPoints = '';
                     var result = '';
                     barcodes.forEach((barcode) => {
-                      console.log(barcode.rawValue);
                       result += ` ${barcode.rawValue}, `;
                       cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
                       cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
@@ -197,7 +197,15 @@
         mycanvas.width = window.visualViewport.width;
         mycanvas.height = window.visualViewport.height;
       }
-      setTimeout(drawImge, 100);
+      }catch (err) {
+        console.log(err);
+        alert(err);
+      }
+      finally{
+        setTimeout(drawImge, 100);
+      }
+      
+      
     }
     //監聽影片元件有資料進入就撥放，
     myvideo.addEventListener("loadedmetadata", (event) => {
