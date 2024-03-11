@@ -21,13 +21,13 @@
     }
 
     .content {
-      position: fixed;
-      bottom: 50%;
       background: rgba(255, 255, 255, 0.5);
       color: #000000;
-      left: 50%;
-      transform: translate(-50%,-50%);
       padding: 20px;
+      transform: translate(-50%, -50%);
+      position: absolute;
+      top: 50%;
+      left: 50%;
     }
   </style>
 
@@ -38,14 +38,17 @@
 
   <video id="myVideo" style="display: none"></video>
   <canvas id="myCanvas"></canvas>
-  <div class="content">
+  <button type="button" id="setting" onclick="alert('Hello world!')">設定</button>
+  <div class="content" style="display: none">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
-    <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select><button class="switch">手電筒</button>
-    <p>
-    <p>掃瞄範圍，寬:<input type="range" step="10" min="100" class="slider" id="scannerW">Value: <span
-        id="scannerWvalue"></span>長:<input type="range" step="10" min="100" class="slider" id="scannerH">Value: <span
-        id="scannerHvalue"></span></p>
+    <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select></p>
+    <button class="switch">手電筒</button>
+    <p>掃瞄範圍</p>
+    <p>寬:<input type="range" step="10" min="100" class="slider" id="scannerW">(<span id="scannerWvalue"></span>)
+    </p>
+    <p>長:<input type="range" step="10" min="100" class="slider" id="scannerH">(<span id="scannerHvalue"></span>)
+    </p>
   </div>
 
   <script>
@@ -58,6 +61,7 @@
     showscannerhvalue();
     const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
+    const btn_setting = document.getElementById('setting');
     const btn = document.querySelector('.switch');
     drawImge();
     screen_orientation();
@@ -304,6 +308,21 @@
     screen.orientation.addEventListener("change", (event) => {
       screen_orientation();
       openCamera();
+    });
+    //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
+    btn_setting.addEventListener('click', function () {
+      try {
+        const settingdiv = document.querySelector('.content');
+        if (settingdiv.style.display == "none") {
+          settingdiv.style.display == "inline";
+        }
+        else {
+          settingdiv.style.display == "none";
+        }
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     });
     //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
     btn.addEventListener('click', function () {
