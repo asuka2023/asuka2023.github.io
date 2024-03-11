@@ -223,10 +223,8 @@
                 result += ` ${barcode.rawValue}, `;
                 cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
                 cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
-               
-             
                 ctx.strokeStyle = "green";
-                
+                return;
               });
               ctx.stroke();
               document.getElementById('message').innerHTML = `條碼:${result} `;
