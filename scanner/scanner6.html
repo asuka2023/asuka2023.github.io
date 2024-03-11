@@ -175,7 +175,9 @@
           //變更canvas大小等於清空
           mycanvas.width = myvideo.videoWidth;
           mycanvas.height = myvideo.videoHeight;
+
           //設定掃描區域寬度元件參數
+          scannerw.max = mycanvas.width; 
           var ScannerW = localStorage.getItem("ScannerW");
           if (ScannerW != null) {
             if (ScannerW > mycanvas.width) {
@@ -188,8 +190,8 @@
             }
           }
           showscannerwvalue();
-          scannerw.max = mycanvas.width;
-          //設定掃描區域長度元件參數
+          //設定掃描區域長度元件參數 
+         scannerh.max = mycanvas.height;
           var ScannerH = localStorage.getItem("ScannerH");
           if (ScannerH != null) {
             if (ScannerH > mycanvas.height) {
@@ -202,7 +204,7 @@
             }
           }
           showscannerhvalue();
-          scannerh.max = mycanvas.height;
+        
           //將相機畫面渲染至canvas
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
           //計算出掃描區域的起始座標X
