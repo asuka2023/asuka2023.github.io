@@ -43,8 +43,8 @@
     <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select><button class="switch">手電筒</button>
     <p>
     <p>掃瞄範圍，寬:<input type="range" step="10" min="100" class="slider" id="scannerW">Value: <span
-        id="scannerWvalue"></span>長:<input type="range" step="10" min="100" class="slider"
-        id="scannerH">Value: <span id="scannerHvalue"></span></p>
+        id="scannerWvalue"></span>長:<input type="range" step="10" min="100" class="slider" id="scannerH">Value: <span
+        id="scannerHvalue"></span></p>
   </div>
 
   <script>
@@ -172,36 +172,53 @@
         const stream = myvideo.srcObject;
         if (stream != null) {
           var ctx = mycanvas.getContext('2d');
-
+          //變更canvas大小等於清空
           mycanvas.width = myvideo.videoWidth;
           mycanvas.height = myvideo.videoHeight;
+          //設定掃描區域寬度元件參數
           var ScannerW = localStorage.getItem("ScannerW");
-          if (ScannerW != null && ScannerW > mycanvas.width) {
-            scannerw.value = mycanvas.width;
-            setscannerwvalue();
+          if (ScannerW != null) {
+            if (ScannerW > mycanvas.width) {
+              scannerw.value = mycanvas.width;
+              setscannerwvalue();
+            }
+            else if (ScannerW != scannerw.value) {
+              scannerw.value = ScannerW;
+              setscannerwvalue();
+            }
           }
-           showscannerwvalue();
+          showscannerwvalue();
           scannerw.max = mycanvas.width;
+          //設定掃描區域長度元件參數
           var ScannerH = localStorage.getItem("ScannerH");
-          if (ScannerH != null && ScannerH > mycanvas.height) {
-            scannerh.value = mycanvas.height;
-            setscannerhvalue();
-          } 
+          if (ScannerH != null) {
+            if (ScannerH > mycanvas.height) {
+              scannerh.value = mycanvas.height;
+              setscannerhvalue();
+            }
+            else if (ScannerH != scannerh.value) {
+              scannerh.value = ScannerH;
+              setscannerhvalue();
+            }
+          }
           showscannerhvalue();
           scannerh.max = mycanvas.height;
-
+          //將相機畫面渲染至canvas
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
+          //計算出掃描區域的起始座標X
           var scannerx = (mycanvas.width - scannerw.value) / 2;
+          //計算出掃描區域的起始座標Y
           var scannery = (mycanvas.height - scannerh.value) / 2;
-          // Create clipping path
+          // mycanvas與掃描區域交集
           let region = new Path2D();
           region.rect(0, 0, mycanvas.width, mycanvas.height);
           region.rect(scannerx, scannery, scannerw.value, scannerh.value);
           ctx.clip(region, "evenodd");
-          // Draw stuff that gets clipped
-          // Turn transparency on
+          //透明度
           ctx.globalAlpha = 0.5;
+          //顏色
           ctx.fillStyle = "black";
+          //填滿顏色區域
           ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
           //擷取出要掃描的區域
           const myImageData = ctx.getImageData(scannerx, scannery, scannerw.value, scannerh.value);
@@ -250,8 +267,8 @@
 
 
     }
-     //儲存掃描區域寬度數值
-     function setscannerwvalue() {
+    //儲存掃描區域寬度數值
+    function setscannerwvalue() {
       localStorage.setItem("ScannerW", scannerw.value);
     }
     //儲存掃描區域長度數值
@@ -260,7 +277,7 @@
     }
     //顯示掃描區域寬度數值
     function showscannerwvalue() {
-    
+
       scannerwvalue.innerHTML = scannerw.value;
     }
     //顯示掃描區域長度數值
