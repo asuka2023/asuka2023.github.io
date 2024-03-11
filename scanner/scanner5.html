@@ -75,6 +75,7 @@
           //相機選單必須要有一個鏡頭以上
           if (sel.length > 0) {
             var selectcamera = localStorage.getItem("CameraId");
+		  alert(selectcamera);
             if(selectcamera != ''){
               sel.value = selectcamera;
             }
