@@ -184,15 +184,16 @@
           var ctx = mycanvas.getContext('2d');
 
           mycanvas.width = myvideo.videoWidth;
-          mycanvas.height = myvideo.videoHeight;
-          scannerw.max = mycanvas.width;
+          mycanvas.height = myvideo.videoHeight; 
           if (scannerw.value > mycanvas.width) {
             scannerw.value = mycanvas.width;
           }
-          scannerh.max = mycanvas.height;
-          if (scannerh.value > mycanvas.height) {
+          scannerw.max = mycanvas.width;
+         if (scannerh.value > mycanvas.height) {
             scannerh.value = mycanvas.height;
           }
+          scannerh.max = mycanvas.height;
+          
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
           var scannerx = (mycanvas.width - scannerw.value) / 2;
           var scannery = (mycanvas.height - scannerh.value) / 2;
