@@ -214,14 +214,14 @@
               ctx.lineWidth = "6";
               ctx.strokeStyle = "white";
               //當檢測出符合條碼的種類邊框變綠色
-              if(barcodes.length > 0){
+              if (barcodes.length > 0) {
                 var barcode = barcodes[0];
                 result += ` ${barcode.rawValue}, `;
                 cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
                 cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
                 ctx.strokeStyle = "green";
               }
-              
+
               ctx.stroke();
               document.getElementById('message').innerHTML = `條碼:${result} `;
               document.getElementById('cornerPoints').innerHTML = cornerPoints;
@@ -247,7 +247,7 @@
     }
     //顯示掃描區域寬度數值
     function showscannerwvalue() {
-      scannerwvalue.innerHTML = scannerw.value;
+      scannerwvalue.innerHTML = scannerw.value};
 
     }
     //顯示掃描區域長度數值
@@ -255,11 +255,11 @@
       scannerhvalue.innerHTML = scannerh.value;
     }
     //當使用者移動掃描區域寬度
-    scannerw.addEventListener("oninput", (event) => {
+    scannerw.addEventListener("input", (event) => {
       showscannerwvalue();
     });
     //當使用者移動掃描區域高度
-    scannerw.addEventListener("oninput", (event) => {
+    scannerw.addEventListener("input", (event) => {
       showscannerhvalue();
     });
     //監聽影片元件有資料進入就撥放，
