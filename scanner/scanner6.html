@@ -42,21 +42,18 @@
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
     <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select><button class="switch">手電筒</button>
     <p>
-    <p>掃瞄範圍，寬:<input type="range" step="10" class="slider" id="scannerW">Value: <span
-        id="scannerWvalue"></span>長:<input type="range" step="10" class="slider"
+    <p>掃瞄範圍，寬:<input type="range" step="10" min="100" class="slider" id="scannerW">Value: <span
+        id="scannerWvalue"></span>長:<input type="range" step="10" min="100" class="slider"
         id="scannerH">Value: <span id="scannerHvalue"></span></p>
   </div>
 
   <script>
-    var scannerw = document.getElementById("scannerW");
-    
-    scannerw.min = 100;
-    var scannerwvalue = document.getElementById("scannerWvalue");
+    const scannerw = document.getElementById("scannerW");
+    const scannerwvalue = document.getElementById("scannerWvalue");
+
     showscannerwvalue();
-    var scannerh = document.getElementById("scannerH");
-   
-    scannerh.min = 100;
-    var scannerhvalue = document.getElementById("scannerHvalue");
+    const scannerh = document.getElementById("scannerH");
+    const scannerhvalue = document.getElementById("scannerHvalue");
     showscannerhvalue();
     const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
@@ -178,15 +175,17 @@
 
           mycanvas.width = myvideo.videoWidth;
           mycanvas.height = myvideo.videoHeight;
-          if (scannerw.value > mycanvas.width) {
+          var ScannerW = localStorage.getItem("ScannerW");
+          if (ScannerW != null && ScannerW > mycanvas.width) {
             scannerw.value = mycanvas.width;
-           
+            setscannerwvalue();
           }
            showscannerwvalue();
           scannerw.max = mycanvas.width;
-          if (scannerh.value > mycanvas.height) {
+          var ScannerH = localStorage.getItem("ScannerH");
+          if (ScannerH != null && ScannerH > mycanvas.height) {
             scannerh.value = mycanvas.height;
-
+            setscannerhvalue();
           } 
           showscannerhvalue();
           scannerh.max = mycanvas.height;
@@ -251,10 +250,18 @@
 
 
     }
+     //儲存掃描區域寬度數值
+     function setscannerwvalue() {
+      localStorage.setItem("ScannerW", scannerw.value);
+    }
+    //儲存掃描區域長度數值
+    function setscannerhvalue() {
+      localStorage.setItem("ScannerH", scannerh.value);
+    }
     //顯示掃描區域寬度數值
     function showscannerwvalue() {
+    
       scannerwvalue.innerHTML = scannerw.value;
-
     }
     //顯示掃描區域長度數值
     function showscannerhvalue() {
@@ -262,10 +269,12 @@
     }
     //當使用者移動掃描區域寬度
     scannerw.addEventListener("input", (event) => {
+      setscannerwvalue();
       showscannerwvalue();
     });
     //當使用者移動掃描區域高度
     scannerw.addEventListener("input", (event) => {
+      setscannerhvalue();
       showscannerhvalue();
     });
     //監聽影片元件有資料進入就撥放，
