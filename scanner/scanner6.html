@@ -206,13 +206,13 @@
           ctx.globalAlpha = 0.5;
           ctx.fillStyle = "black";
           ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
-
+          const myImageData = ctx.getImageData(scannerx, scannery, scannerw.value, scannerh.value);
           // 建立條碼種類
           var barcodeDetector = new BarcodeDetector({
             formats: ["code_128", "qr_code"],
           });
           barcodeDetector
-            .detect(mycanvas)
+            .detect(myImageData)
             .then((barcodes) => {
               var cornerPoints = '';
               var result = '';
