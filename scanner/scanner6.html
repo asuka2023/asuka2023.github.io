@@ -187,10 +187,12 @@
           mycanvas.height = myvideo.videoHeight; 
           if (scannerw.value > mycanvas.width) {
             scannerw.value = mycanvas.width;
+            scannerwvalue.innerHTML = scannerw.value;
           }
           scannerw.max = mycanvas.width;
          if (scannerh.value > mycanvas.height) {
             scannerh.value = mycanvas.height;
+            scannerhvalue.innerHTML = scannerh.value;
           }
           scannerh.max = mycanvas.height;
           
