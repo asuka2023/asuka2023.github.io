@@ -21,7 +21,7 @@
     }
 
     .content {
-      background: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 1);
       color: #000000;
       padding: 20px;
       transform: translate(-50%, -50%);
@@ -45,7 +45,7 @@
     }
 
     .btnsetting {
-    
+
       background-color: #e7e7e7;
       color: black;
     }
@@ -55,9 +55,8 @@
       bottom: 0px;
       width: 100%;
       padding: 8px;
-     
-    }
 
+    }
   </style>
 
 
@@ -68,19 +67,21 @@
   <video id="myVideo" style="display: none"></video>
   <canvas id="myCanvas"></canvas>
   <div id="divbottom">
-    <button type="button" id="setting" class="button btnsetting">設定</button> <span style="color:red;font-weight:bold">條碼:</span> <span id="barcodeValue" style="color:red;font-weight:bold"></span>
+    <button type="button" id="setting" class="button btnsetting">設定</button> <span
+      style="color:red;font-weight:bold">條碼:</span> <span id="barcodeValue" style="color:red;font-weight:bold"></span>
   </div>
-  
+
   <div class="content" style="display: none">
-    <p>訊息:<span id="message"></span></p>
-    <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
+    <p>條碼掃描:<span id="support"></span></p>
     <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select></p>
-    <button class="button" id="torch">手電筒</button>
     <p>掃瞄範圍</p>
     <p>寬:<input type="range" step="10" min="100" class="slider" id="scannerW">(<span id="scannerWvalue"></span>)
     </p>
     <p>長:<input type="range" step="10" min="100" class="slider" id="scannerH">(<span id="scannerHvalue"></span>)
     </p>
+    <button class="button" id="torch">手電筒</button>
+    <!--<p>訊息:<span id="message"></span></p>-->
+    <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
   </div>
 
   <script>
@@ -94,7 +95,7 @@
     const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
     const btn_setting = document.getElementById('setting');
-    const btn =document.getElementById('torch');
+    const btn = document.getElementById('torch');
     drawImge();
     screen_orientation();
     //document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
@@ -125,10 +126,10 @@
             // 檢查瀏覽器相容性
             if (!("BarcodeDetector" in globalThis)) {
               console.log("此瀏覽器不支援條碼掃描。");
-              document.getElementById('message').innerHTML = '此瀏覽器不支援條碼掃描';
+              document.getElementById('support').innerHTML = '不支援';
             } else {
               console.log("此瀏覽器支援條碼掃描");
-              document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
+              document.getElementById('support').innerHTML = '支援';
 
               openCamera();
 
@@ -163,7 +164,7 @@
     //開啟相機失敗
     function openCameraError(err) {
       console.error(`${err.name}: ${err.message}`);
-      document.getElementById('message').innerHTML = `${err.name}: ${err.message}`;
+      //document.getElementById('message').innerHTML = `${err.name}: ${err.message}`;
     }
     //關閉相機串流
     function stopCamera() {
@@ -263,7 +264,7 @@
           var barcodeDetector = new BarcodeDetector({
             formats: ["code_128", "qr_code"],
           });
-         
+
           document.getElementById('barcodeValue').innerHTML = '';
           //檢測條碼
           barcodeDetector
