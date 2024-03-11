@@ -40,11 +40,21 @@
   <div class="content">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
-    <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select> <button class="switch">手電筒</button>
+    <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select> <input type="range" min="0" max="1.0"
+        value="0.5" step="0.1" class="slider" id="alphaValue">
+    <p>Value: <span id="alphaStr"></span></p> <button class="switch">手電筒</button>
     <p>
+
   </div>
 
   <script>
+    var alphavalue = document.getElementById("alphaValue");
+    var alphastr = document.getElementById("alphaStr");
+    alphastr.innerHTML = alphavalue.value;
+
+    alphavalue.oninput = function () {
+      alphastr.innerHTML = this.value;
+    }
     const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
     const btn = document.querySelector('.switch');
@@ -169,10 +179,9 @@
           mycanvas.height = myvideo.videoHeight;
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
           // Turn transparency on
-          ctx.globalAlpha = 0.9;
+          ctx.globalAlpha = alphavalue.value;
           ctx.fillStyle = "black";
           ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
-           ctx.globalAlpha = 1;
           // 建立條碼種類
           var barcodeDetector = new BarcodeDetector({
             formats: ["code_128", "qr_code"],
