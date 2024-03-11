@@ -169,9 +169,10 @@
           mycanvas.height = myvideo.videoHeight;
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
           // Turn transparency on
-          ctx.globalAlpha = 0.5;
+          ctx.globalAlpha = 0.9;
           ctx.fillStyle = "black";
           ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
+           ctx.globalAlpha = 1;
           // 建立條碼種類
           var barcodeDetector = new BarcodeDetector({
             formats: ["code_128", "qr_code"],
