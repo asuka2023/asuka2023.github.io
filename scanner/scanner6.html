@@ -42,16 +42,20 @@
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
     <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select><button class="switch">手電筒</button>
     <p>
-    <p>掃瞄範圍，寬:<input type="range" min="100" max="200" value="100" step="10" class="slider" id="scannerW">Value: <span
-        id="scannerWvalue"></span>長:<input type="range" min="100" max="200" value="100" step="10" class="slider"
+    <p>掃瞄範圍，寬:<input type="range" step="10" class="slider" id="scannerW">Value: <span
+        id="scannerWvalue"></span>長:<input type="range" step="10" class="slider"
         id="scannerH">Value: <span id="scannerHvalue"></span></p>
   </div>
 
   <script>
     var scannerw = document.getElementById("scannerW");
+    scannerw.value = 100;
+    scannerw.min = 100;
     var scannerwvalue = document.getElementById("scannerWvalue");
     showscannerwvalue();
     var scannerh = document.getElementById("scannerH");
+    scannerh.value = 100;
+    scannerh.min = 100;
     var scannerhvalue = document.getElementById("scannerHvalue");
     showscannerhvalue();
     const mycanvas = document.getElementById('myCanvas');
@@ -176,13 +180,15 @@
           mycanvas.height = myvideo.videoHeight;
           if (scannerw.value > mycanvas.width) {
             scannerw.value = mycanvas.width;
-            showscannerwvalue();
+           
           }
+           showscannerwvalue();
           scannerw.max = mycanvas.width;
           if (scannerh.value > mycanvas.height) {
             scannerh.value = mycanvas.height;
-            showscannerhvalue();
-          }
+
+          } 
+          showscannerhvalue();
           scannerh.max = mycanvas.height;
 
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
@@ -211,9 +217,9 @@
               var cornerPoints = '';
               var result = '';
               ctx.rect(scannerx, scannery, scannerw.value, scannerh.value);
-              ctx.lineWidth = "6";
-              ctx.strokeStyle = "white";
-              //當檢測出符合條碼的種類邊框變綠色
+              ctx.lineWidth = "10";
+              ctx.strokeStyle = "red";
+              //當檢測出符合條碼的種類邊框變綠色，不符合紅色
               if (barcodes.length > 0) {
                 var barcode = barcodes[0];
                 result += ` ${barcode.rawValue}, `;
