@@ -82,7 +82,7 @@
             } else {
               console.log("此瀏覽器支援條碼掃描");
               document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
-             
+
               openCamera();
               /*
               setInterval(function () {
@@ -161,52 +161,56 @@
       }
     }
     function drawImge() {
-      try{
+      try {
         const stream = myvideo.srcObject;
-      if (stream != null) {
-        var ctx = mycanvas.getContext('2d');
-        mycanvas.width = myvideo.videoWidth;
-        mycanvas.height = myvideo.videoHeight;
-        ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
-         // 建立條碼種類
-         var barcodeDetector = new BarcodeDetector({
-                formats: ["code_128", "qr_code"],
+        if (stream != null) {
+          var ctx = mycanvas.getContext('2d');
+          mycanvas.width = myvideo.videoWidth;
+          mycanvas.height = myvideo.videoHeight;
+          ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
+          // Turn transparency on
+          ctx.globalAlpha = 0.2;
+          ctx.fillStyle = "black";
+          ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
+          // 建立條碼種類
+          var barcodeDetector = new BarcodeDetector({
+            formats: ["code_128", "qr_code"],
+          });
+          barcodeDetector
+            .detect(mycanvas)
+            .then((barcodes) => {
+              var cornerPoints = '';
+              var result = '';
+              barcodes.forEach((barcode) => {
+                result += ` ${barcode.rawValue}, `;
+                cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
+                cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
+                ctx.rect(barcode.boundingBox.x, barcode.boundingBox.y, barcode.boundingBox.width, barcode.boundingBox.height);
+                ctx.lineWidth = "6";
+                ctx.strokeStyle = "red";
+                ctx.stroke();
               });
-        barcodeDetector
-                  .detect(mycanvas)
-                  .then((barcodes) => {
-                    var cornerPoints = '';
-                    var result = '';
-                    barcodes.forEach((barcode) => {
-                      result += ` ${barcode.rawValue}, `;
-                      cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
-                      cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
-                       ctx.rect(barcode.boundingBox.x , barcode.boundingBox.y , barcode.boundingBox.width , barcode.boundingBox.height );
-                       ctx.lineWidth = "6";
-                       ctx.strokeStyle = "red";
-                       ctx.stroke();
-                    });
-                    document.getElementById('message').innerHTML = `條碼:${result} `;
-                    document.getElementById('cornerPoints').innerHTML = cornerPoints;
-                    //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
-                  })
-                  .catch((err) => {
-                    console.log(err);
-                  });
-      }
-      else {
-        mycanvas.width = window.visualViewport.width;
-        mycanvas.height = window.visualViewport.height;
-      }
-      }catch (err) {
+              document.getElementById('message').innerHTML = `條碼:${result} `;
+              document.getElementById('cornerPoints').innerHTML = cornerPoints;
+              //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        }
+        else {
+          mycanvas.width = window.visualViewport.width;
+          mycanvas.height = window.visualViewport.height;
+        }
+      } catch (err) {
         console.log(err);
         alert(err);
       }
-      finally{
+      finally {
         setTimeout(drawImge, 100);
       }
-      
-      
+
+
     }
     //監聽影片元件有資料進入就撥放，
     myvideo.addEventListener("loadedmetadata", (event) => {
