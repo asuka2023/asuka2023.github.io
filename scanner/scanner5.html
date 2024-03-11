@@ -76,7 +76,7 @@
           if (sel.length > 0) {
             var selectcamera = localStorage.getItem("CameraId");
 		  alert(selectcamera);
-            if(selectcamera != ''){
+            if(selectcamera != null && selectcamera != ''){
               sel.value = selectcamera;
             }
             
