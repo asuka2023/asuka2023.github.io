@@ -2,26 +2,27 @@
 <html>
 
 <head>
+<meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial;
-      font-size: 17px;
-    }
-
+ 
+ body {
+  margin: 0;
+   background: rgba(0, 0, 0, 1);
+}
     #myVideo {
-      position: fixed;
-      top: 0;
-      left: 0;
-      min-width: 100%;
-      min-height: 100%;
-    }
-
+      position: fixed; 
+	  top:0;
+	 left: 50%;
+	 transform: translate(-50%);
+ }
+     #myCanvas {
+      position: fixed; 
+	  top:0;
+	   background: rgba(0, 0, 0, 0);
+	  left: 50%;
+	 transform: translate(-50%);
+ }
     .content {
       position: fixed;
       bottom: 0;
@@ -31,25 +32,27 @@
       padding: 20px;
     }
   </style>
+  
+
 </head>
 
 <body>
 
-  <video id="myVideo"></video>
+  <video id="myVideo" ></video>
+ <canvas id="myCanvas"></canvas>
   <div class="content">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
-    <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select>
-    <p>
+    <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select> <button class="switch">手電筒</button><p>
   </div>
 
   <script>
-    var barcodeDetector = null;
+   const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
-    //myvideo.width = window.visualViewport.width;
-    //myvideo.height = window.visualViewport.height;
-    document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
-    var scannerInterval = setInterval(scannerBarode, 10000);
+	 const btn = document.querySelector('.switch');
+	screen_orientation();
+    //document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
+   
     stopCamera();
     if (!navigator.mediaDevices?.enumerateDevices) {
       alert("enumerateDevices() not supported.");
@@ -84,10 +87,48 @@
               console.log("此瀏覽器支援條碼掃描");
               document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
              // 建立條碼種類
-             barcodeDetector = new BarcodeDetector({
+            var barcodeDetector = new BarcodeDetector({
                   formats: ["code_128", "qr_code"],
                 });
               openCamera();
+			  
+			  
+			  
+			  setInterval(function() {
+			  barcodeDetector
+          .detect(myvideo)
+          .then((barcodes) => {
+            var cornerPoints = '';
+            var result = '';
+			 var ctx    = mycanvas.getContext('2d');
+			 mycanvas.width = myvideo.offsetWidth;
+			mycanvas.height = myvideo.offsetHeight;
+		
+			var xscale = myvideo.offsetWidth/myvideo.videoWidth;
+			var yscale = myvideo.offsetHeight/myvideo.videoHeight;
+			
+            barcodes.forEach((barcode) => {
+			
+              console.log(barcode.rawValue);
+              result += ` ${barcode.rawValue}, `;
+              cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
+   cornerPoints += ` [${barcode.boundingBox.x*xscale}, ${barcode.boundingBox.y*yscale},${barcode.boundingBox.width*xscale},${barcode.boundingBox.height*yscale}]  `;
+cornerPoints += `,[${myvideo.offsetWidth},${myvideo.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;       
+	   ctx.rect(barcode.boundingBox.x*xscale,barcode.boundingBox.y*yscale,barcode.boundingBox.width*xscale,barcode.boundingBox.height*yscale);
+              ctx.lineWidth = "6";
+              ctx.strokeStyle = "red";    
+              ctx.stroke();
+            });
+            document.getElementById('message').innerHTML = `條碼:${result} `;
+            document.getElementById('cornerPoints').innerHTML= cornerPoints;
+            //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+
+          })
+          .catch((err) => {
+            console.log(err);
+           // alert(err);
+            //stopScannerBarode();
+          });}, 100);
             }
           }
         })
@@ -96,46 +137,7 @@
           alert(`${err.name}: ${err.message}`);
         });
     }
-    //開啟判斷條碼
-    function startScannerBarode() {
-      scannerInterval = setInterval(scannerBarode, 100);
-    }
-    //關閉判斷條碼
-    function stopScannerBarode() {
-      clearInterval(scannerInterval);
-    }
-
-    //判斷條碼
-    function scannerBarode() {
-      if (myvideo.srcObject != null && barcodeDetector != null) {
-       
-        barcodeDetector
-          .detect(myvideo)
-          .then((barcodes) => {
-            var cornerPoints = '';
-            var result = '';
-            barcodes.forEach((barcode) => {
-              console.log(barcode.rawValue);
-              result += ` ${barcode.rawValue}, `;
-              //cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}], `;
-              // ctx.rect(barcode.boundingBox.x,barcode.boundingBox.y,barcode.boundingBox.width,barcode.boundingBox.height);
-              //ctx.lineWidth = "6";
-              // ctx.strokeStyle = "red";    
-              //ctx.stroke();
-            });
-            document.getElementById('message').innerHTML = `條碼:${result} `;
-            //document.getElementById('cornerPoints').innerHTML= cornerPoints;
-            //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
-
-          })
-          .catch((err) => {
-            console.log(err);
-            alert(err);
-            stopScannerBarode();
-          });
-      }
-
-    }
+	
     
     //開啟相機
     function openCamera() {
@@ -143,7 +145,7 @@
       // Prefer camera resolution nearest to 1280x720.
       var constraints = {
         audio: false,
-        video: { width: window.visualViewport.width, height: window.visualViewport.height, facingMode: "environment", frameRate: { min: 10, max: 30 }, deviceId: document.getElementById("mediaDevices").value, },
+        video: { facingMode: "environment", frameRate: { min: 10, max: 30 }, deviceId: document.getElementById("mediaDevices").value, },
       };
       document.getElementById('cornerPoints').innerHTML = `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
 
@@ -156,7 +158,9 @@
     function openCameraSuccess(mediaStream) {
 
       myvideo.srcObject = mediaStream;
-
+      //let there be light!
+        const btn = document.querySelector('.switch');
+      
     }
     //開啟相機失敗
     function openCameraError(err) {
@@ -166,7 +170,7 @@
     //關閉相機串流
     function stopCamera() {
       try {
-        stopScannerBarode();
+   
         const stream = myvideo.srcObject;
         if (stream != null) {
           const tracks = stream.getTracks();
@@ -190,26 +194,74 @@
       localStorage.setItem("CameraId", document.getElementById("mediaDevices").value);
       openCamera();
     }
+	function screen_orientation(){
+		 switch (screen.orientation.type) {
+		  case "landscape-primary":
+		  case "landscape-secondary":
+			myvideo.style.width = "auto";
+			myvideo.style.height = "100%";
+
+			break;
+		  case "portrait-secondary":
+		  case "portrait-primary":
+			myvideo.style.width = "100%";
+			myvideo.style.height = "auto";
+
+			break;
+		  default:
+			console.log("The orientation API isn't supported in this browser :(");
+		}
+	}
     //監聽影片元件有資料進入就撥放，
     myvideo.addEventListener("loadedmetadata", (event) => {
       myvideo.play();
-      startScannerBarode();
-    });
-    //監聽瀏覽器尺寸大小
-    visualViewport.addEventListener('resize', () => {
-      //myvideo.width = window.visualViewport.width;
-      //myvideo.height = window.visualViewport.height;
-      openCamera();
-      // document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;	
+		mycanvas.width = myvideo.offsetWidth;
+			mycanvas.height = myvideo.offsetHeight;
+	  
+			  var ctx    = mycanvas.getContext('2d');
+			  ctx.rect(0,0,myvideo.offsetWidth,myvideo.offsetHeight);
+              ctx.lineWidth = "6";
+              ctx.strokeStyle = "red";    
+              ctx.stroke();
+      //startScannerBarode();
     });
     //監聽瀏覽器螢幕方向
     screen.orientation.addEventListener("change", (event) => {
-      const type = event.target.type;
-      const angle = event.target.angle;
+  
+	 screen_orientation();
+	 
       openCamera();
-      //document.getElementById('cornerPoints').innerHTML= `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${type}, 旋轉角度:${angle}`;
-    });
-  </script>
+        });
+ //監聽按鈕手電筒
+ btn.addEventListener('click', function(){
+ try {
+   
+        const stream = myvideo.srcObject;
+        if (stream != null) {
+		const track = stream.getVideoTracks()[0];
+
+		 track.applyConstraints({
+            advanced: [{torch: true}]
+          });
+		 
+		/*
+          const tracks = stream.getTracks();
+		  tracks.forEach((track) => {
+            track.applyConstraints({
+            advanced: [{torch: true}]
+          });
+          });
+          */
+
+        }
+
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
+   
+        }); 
+		</script>
 </body>
 
 </html>
