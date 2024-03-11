@@ -9,9 +9,6 @@
       margin: 0;
       background: rgba(0, 0, 0, 1);
     }
-
-
-
     #myCanvas {
       position: fixed;
       top: 0;
@@ -19,7 +16,6 @@
       left: 50%;
       transform: translate(-50%);
     }
-
     .content {
       background: rgba(255, 255, 255, 1);
       color: #000000;
@@ -31,7 +27,6 @@
       overflow: auto;
       font-size: 16px;
     }
-
     .button {
       background-color: #04AA6D;
       /* Green */
@@ -45,13 +40,10 @@
       margin: 4px 2px;
       cursor: pointer;
     }
-
     .btnsetting {
-
       background-color: #e7e7e7;
       color: black;
     }
-
     #divbottom {
       position: fixed;
       bottom: 0px;
@@ -72,7 +64,6 @@
     <button type="button" id="setting" class="button btnsetting">設定</button> <span
       style="color:red;font-weight:bold">條碼:</span> <span id="barcodeValue" style="color:red;font-weight:bold"></span>
   </div>
-
   <div class="content" style="display: none">
     <p>條碼掃描:<span id="support"></span></p>
     <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select></p>
@@ -85,14 +76,14 @@
     <!--<p>訊息:<span id="message"></span></p>-->
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
   </div>
-
   <script>
     const scannerw = document.getElementById("scannerW");
     const scannerwvalue = document.getElementById("scannerWvalue");
-
+    //顯示掃描區域寬度數值
     showscannerwvalue();
     const scannerh = document.getElementById("scannerH");
     const scannerhvalue = document.getElementById("scannerHvalue");
+    //顯示掃描區域高度數值
     showscannerhvalue();
     const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
@@ -266,7 +257,7 @@
           var barcodeDetector = new BarcodeDetector({
             formats: ["code_128", "qr_code"],
           });
-
+          // 清空條碼結果
           document.getElementById('barcodeValue').innerHTML = '';
           //檢測條碼
           barcodeDetector
@@ -346,7 +337,7 @@
       screen_orientation();
       openCamera();
     });
-    //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
+    //開關設定畫面
     btn_setting.addEventListener('click', function () {
       try {
         const settingdiv = document.querySelector('.content');
