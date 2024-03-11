@@ -65,7 +65,7 @@
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
     <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select></p>
-    <button class="button">手電筒</button>
+    <button class="button" id="torch">手電筒</button>
     <p>掃瞄範圍</p>
     <p>寬:<input type="range" step="10" min="100" class="slider" id="scannerW">(<span id="scannerWvalue"></span>)
     </p>
@@ -84,7 +84,7 @@
     const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
     const btn_setting = document.getElementById('setting');
-    const btn = document.querySelector('.switch');
+    const btn =document.getElementById('torch');
     drawImge();
     screen_orientation();
     //document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
