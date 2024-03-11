@@ -35,7 +35,7 @@
       /* Green */
       border: none;
       color: white;
-      padding: 15px 32px;
+      padding: 8px;
       text-align: center;
       text-decoration: none;
       display: inline-block;
@@ -60,9 +60,9 @@
 
   <video id="myVideo" style="display: none"></video>
   <canvas id="myCanvas"></canvas>
-  <button type="button" id="setting" class="button btnsetting">設定</button>
+  <p><button type="button" id="setting" class="button btnsetting">設定</button> 條碼:<span id="barcodeValue"></span></p>
   <div class="content" style="display: none">
-    <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
+    <p>訊息:<span id="message"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
     <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select></p>
     <button class="button" id="torch">手電筒</button>
@@ -253,6 +253,8 @@
           var barcodeDetector = new BarcodeDetector({
             formats: ["code_128", "qr_code"],
           });
+         
+          document.getElementById('barcodeValue').innerHTML = '';
           //檢測條碼
           barcodeDetector
             .detect(myImageData)
@@ -271,7 +273,7 @@
                 ctx.strokeStyle = "green";
               }
               ctx.stroke();
-              document.getElementById('message').innerHTML = `條碼:${result} `;
+              document.getElementById('barcodeValue').innerHTML = `${result}`;
               document.getElementById('cornerPoints').innerHTML = cornerPoints;
               //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
             })
