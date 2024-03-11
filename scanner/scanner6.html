@@ -40,20 +40,27 @@
   <div class="content">
     <p>訊息:<span id="message" style="color:red;font-weight:bold"></span></p>
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
-    <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select> <input type="range" min="0" max="1.0"
-        value="0.5" step="0.1" class="slider" id="alphaValue">
-    <p>Value: <span id="alphaStr"></span></p> <button class="switch">手電筒</button>
+    <p>設備:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select><button class="switch">手電筒</button>
     <p>
-
+    <p>掃瞄範圍，寬:<input type="range" min="0" max="100" value="100" step="10" class="slider" id="scannerW">Value: <span
+        id="scannerWvalue"></span>長:<input type="range" min="0" max="100" value="100" step="10" class="slider"
+        id="scannerH">Value: <span id="scannerHvalue"></span></p>
   </div>
 
   <script>
-    var alphavalue = document.getElementById("alphaValue");
-    var alphastr = document.getElementById("alphaStr");
-    alphastr.innerHTML = alphavalue.value;
+    var scannerw = document.getElementById("scannerW");
+    var scannerwvalue = document.getElementById("scannerWvalue");
+    scannerwvalue.innerHTML = scannerw.value;
 
-    alphavalue.oninput = function () {
-      alphastr.innerHTML = this.value;
+    scannerw.oninput = function () {
+      scannerwvalue.innerHTML = this.value;
+    }
+    var scannerh = document.getElementById("scannerH");
+    var scannerhvalue = document.getElementById("scannerHvalue");
+    scannerhvalue.innerHTML = scannerh.value;
+
+    scannerh.oninput = function () {
+      scannerhvalue.innerHTML = this.value;
     }
     const mycanvas = document.getElementById('myCanvas');
     const myvideo = document.getElementById('myVideo');
@@ -175,8 +182,11 @@
         const stream = myvideo.srcObject;
         if (stream != null) {
           var ctx = mycanvas.getContext('2d');
+
           mycanvas.width = myvideo.videoWidth;
           mycanvas.height = myvideo.videoHeight;
+          scannerw.max = mycanvas.width;
+          scannerh.max = mycanvas.height;
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
           // Turn transparency on
           ctx.globalAlpha = alphavalue.value;
