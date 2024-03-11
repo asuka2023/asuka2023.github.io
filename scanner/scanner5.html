@@ -75,7 +75,7 @@
           //相機選單必須要有一個鏡頭以上
           if (sel.length > 0) {
             var selectcamera = localStorage.getItem("CameraId");
-		  alert(selectcamera);
+		
             if(selectcamera != null && selectcamera != ''){
               sel.value = selectcamera;
             }
@@ -240,7 +240,7 @@ cornerPoints += `,[${myvideo.offsetWidth},${myvideo.offsetHeight}],[${myvideo.vi
         const stream = myvideo.srcObject;
         if (stream != null) {
 		const track = stream.getVideoTracks()[0];
-
+var capabilities = track.getCapabilities();
 		 track.applyConstraints({
             advanced: [{torch: true}]
           });
