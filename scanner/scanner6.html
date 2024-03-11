@@ -82,10 +82,7 @@
             } else {
               console.log("此瀏覽器支援條碼掃描");
               document.getElementById('message').innerHTML = '此瀏覽器支援條碼掃描';
-              // 建立條碼種類
-              var barcodeDetector = new BarcodeDetector({
-                formats: ["code_128", "qr_code"],
-              });
+             
               openCamera();
               /*
               setInterval(function () {
@@ -171,6 +168,10 @@
         mycanvas.width = myvideo.videoWidth;
         mycanvas.height = myvideo.videoHeight;
         ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
+         // 建立條碼種類
+         var barcodeDetector = new BarcodeDetector({
+                formats: ["code_128", "qr_code"],
+              });
         barcodeDetector
                   .detect(mycanvas)
                   .then((barcodes) => {
