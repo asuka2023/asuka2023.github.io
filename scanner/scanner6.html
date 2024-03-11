@@ -186,12 +186,27 @@
           mycanvas.width = myvideo.videoWidth;
           mycanvas.height = myvideo.videoHeight;
           scannerw.max = mycanvas.width;
+          if (scannerrw.value > mycanvas.width) {
+            scannerw.value = mycanvas.width;
+          }
           scannerh.max = mycanvas.height;
+          if (scannerh.value > mycanvas.height) {
+            scannerh.value = mycanvas.height;
+          }
           ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
+          var scannerx = (mycanvas.width - scannerw.value) / 2;
+          var scannery = (mycanvas.height - scannerh.value) / 2;
+          // Create clipping path
+          let region = new Path2D();
+          region.rect(0, 0, mycanvas.width, mycanvas.height);
+          region.rect(scannerx, scannery, scannerw.value, scannerh.value);
+          ctx.clip(region, "evenodd");
+          // Draw stuff that gets clipped
           // Turn transparency on
           ctx.globalAlpha = 0.5;
           ctx.fillStyle = "black";
-          ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
           // 建立條碼種類
           var barcodeDetector = new BarcodeDetector({
             formats: ["code_128", "qr_code"],
