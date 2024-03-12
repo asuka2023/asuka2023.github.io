@@ -18,6 +18,7 @@
             transform: translate(-50%);
         }
 
+
         .content {
             background: rgba(255, 255, 255, 0.5);
             color: #000000;
@@ -65,7 +66,9 @@
 
     <video id="myVideo" style="display: none"></video>
     <canvas id="myCanvas"></canvas>
+
     <div id="divbottom">
+        <button type="button" id="fullscreen" class="button ">全螢幕</button>
         <button type="button" id="setting" class="button btnsetting">設定</button> <span
             style="color:red;font-weight:bold">條碼:</span> <span id="barcodeValue"
             style="color:red;font-weight:bold"></span>
@@ -103,6 +106,8 @@
         const myvideo = document.getElementById('myVideo');
         //設定設定按鈕元件變數
         const btn_setting = document.getElementById('setting');
+        //設定全螢幕按鈕元件變數
+        const btn_fullscreen = document.getElementById('fullscreen');
         //設定手電筒按鈕元件變數
         const btn = document.getElementById('torch');
         //設定鏡頭焦距元件變數
@@ -112,7 +117,7 @@
         screen_orientation();
         //document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
         stopCamera();
-       
+
         //檢查瀏覽器是否有相機、麥克風、耳機等多媒裝置 
         if (!navigator.mediaDevices?.enumerateDevices) {
             alert("瀏覽器不支援多媒體裝置");
@@ -179,7 +184,7 @@
             //將鏡頭串流賦予給影片元件
             myvideo.srcObject = mediaStream;
             setapplyConstraints(false, true);
-          
+
             /*
             try {
                 //如果串流不等於NULL
@@ -291,6 +296,7 @@
                     //變更canvas大小等於清空
                     mycanvas.width = myvideo.videoWidth;
                     mycanvas.height = myvideo.videoHeight;
+
                     //設定掃描區域寬度元件參數
                     scannerw.max = mycanvas.width;
                     //讀取儲存掃描區域寬度
@@ -407,7 +413,7 @@
                 setTimeout(drawImge, 100);
             }
         }
-       
+
         //儲存掃描區域寬度數值
         function setscannerwvalue() {
             if (scannerw.max > 100) {
@@ -455,22 +461,26 @@
         });
         //開關設定畫面
         btn_setting.addEventListener('click', function () {
-            openFullscreen();
+
             try {
                 //設定設定畫面元件變數
                 const settingdiv = document.querySelector('.content');
                 //display狀態為none就更改為inline(顯示)，狀態為其他就更改為none(影藏)
                 if (settingdiv.style.display == "none") {
                     settingdiv.style.display = "inline";
+
                 }
                 else {
                     settingdiv.style.display = "none";
+
                 }
             } catch (err) {
                 console.log(err);
                 alert(err);
             }
         });
+
+
         //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
         btn.addEventListener('click', function () {
             setapplyConstraints(true, false);
@@ -553,27 +563,45 @@
                 alert(err);
             }
         }
+        //文檔的根元素
         var elem = document.documentElement;
         //開啟全螢幕
         function openFullscreen() {
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-        } else if (elem.webkitRequestFullscreen) { /* Safari */
-            elem.webkitRequestFullscreen();
-        } else if (elem.msRequestFullscreen) { /* IE11 */
-            elem.msRequestFullscreen();
-        }
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { /* Safari */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE11 */
+                elem.msRequestFullscreen();
+            }
         }
         //關閉全螢幕
         function closeFullscreen() {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-        } else if (document.webkitExitFullscreen) { /* Safari */
-            document.webkitExitFullscreen();
-        } else if (document.msExitFullscreen) { /* IE11 */
-            document.msExitFullscreen();
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitExitFullscreen) { /* Safari */
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) { /* IE11 */
+                document.msExitFullscreen();
+            }
         }
-        } 
+        //開關全螢幕
+        btn_fullscreen.addEventListener('click', function () {
+            var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+                (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+                (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+                (document.msFullscreenElement && document.msFullscreenElement !== null);
+            if (!isInFullScreen) {
+                openFullscreen();
+            } else {
+                closeFullscreen();
+            }
+
+        }); 
     </script>
 </body>
 
