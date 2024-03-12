@@ -72,11 +72,14 @@
     </p>
     <p>長:<input type="range" step="10" min="50" class="slider" id="scannerH">(<span id="scannerHvalue"></span>)
     </p>
+     <p>焦距:<input type="range"  class="slider" id="focal">(<span id="focalvalue"></span>)
+    </p>
     <button class="button" id="torch">手電筒</button>
     <!--<p>訊息:<span id="message"></span></p>-->
     <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
   </div>
   <script>
+    var torch = false;
     const scannerw = document.getElementById("scannerW");
     const scannerwvalue = document.getElementById("scannerWvalue");
     //顯示掃描區域寬度數值
@@ -89,6 +92,8 @@
     const myvideo = document.getElementById('myVideo');
     const btn_setting = document.getElementById('setting');
     const btn = document.getElementById('torch');
+    const focal = document.getElementById("focal");
+    const focalvalue = document.getElementById("focalvalue");
     drawImge();
     screen_orientation();
     //document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
@@ -150,9 +155,29 @@
     //開啟相機成功
     function openCameraSuccess(mediaStream) {
       myvideo.srcObject = mediaStream;
-      //let there be light!
-      const btn = document.querySelector('.switch');
-
+        try {
+   
+        if (mediaStream != null) {
+          const track = mediaStream.getVideoTracks()[0];
+           const capabilities = track.getCapabilities();
+           const settings = track.getSettings();
+          var advanced = [];
+          if (!('zoom' in settings)) {
+            console.log('Zoom is not supported by ' + track.label);
+          }
+          else{
+           // Map zoom to a slider element.
+          focal.min = capabilities.zoom.min;
+          focal.max = capabilities.zoom.max;
+          focal.step = capabilities.zoom.step;
+          focal.value = settings.zoom;
+          }
+       
+        }
+      } catch (err) {
+        console.log(err);
+        alert(err);
+      }
     }
     //開啟相機失敗
     function openCameraError(err) {
@@ -177,6 +202,7 @@
     }
     //切換相機
     function mediaDevices_onchange() {
+      torch = false;
       localStorage.setItem("CameraId", document.getElementById("mediaDevices").value);
       openCamera();
     }
@@ -327,6 +353,11 @@
       setscannerhvalue();
       showscannerhvalue();
     });
+      //當使用者移動焦距
+    focal.addEventListener("input", (event) => {
+      setapplyConstraints(false);
+     focalvalue.innerHTML = focal.value;
+    });
     //監聽影片元件有資料進入就撥放，
     myvideo.addEventListener("loadedmetadata", (event) => {
       myvideo.play();
@@ -354,19 +385,48 @@
     });
     //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
     btn.addEventListener('click', function () {
-      try {
+    setapplyConstraints(true);
+    }); 
+    //設定鏡頭參數
+    function setapplyConstraints(light) {
+     try {
         const stream = myvideo.srcObject;
         if (stream != null) {
           const track = stream.getVideoTracks()[0];
+           const capabilities = track.getCapabilities();
+           const settings = track.getSettings();
+          var advanced = [];
+          if (!('zoom' in settings)) {
+            console.log('Zoom is not supported by ' + track.label);
+          
+          }
+          else{
+            advanced.push({
+                zoom:   focal.value
+            });
+          }
+         if (!('torch' in settings)) {
+            console.log('Torch is not supported by ' + track.label);
+          }
+          else{ 
+            if(light){  
+            torch = !torch;
+            }
+            advanced.push({
+                torch:   torch
+            });
+ 
+          }
+         
           track.applyConstraints({
-            advanced: [{ torch: true }]
+            advanced: advanced
           });
         }
       } catch (err) {
         console.log(err);
         alert(err);
       }
-    }); 
+    }
   </script>
 </body>
 
