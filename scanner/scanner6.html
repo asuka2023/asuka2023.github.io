@@ -179,6 +179,8 @@
         function openCameraSuccess(mediaStream) {
             //將鏡頭串流賦予給影片元件
             myvideo.srcObject = mediaStream;
+            setapplyConstraints(false, true);
+            /*
             try {
                 //如果串流不等於NULL
                 if (mediaStream != null) {
@@ -222,7 +224,7 @@
             } catch (err) {
                 console.log(err);
                 alert(err);
-            }
+            }*/
         }
         //開啟相機失敗
         function openCameraError(err) {
@@ -437,7 +439,7 @@
         });
         //當使用者移動焦距
         focal.addEventListener("input", (event) => {
-            setapplyConstraints(false);
+            setapplyConstraints(false, false);
             localStorage.setItem("Focal", focal.value);
             focalvalue.innerHTML = focal.value;
         });
@@ -469,10 +471,10 @@
         });
         //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
         btn.addEventListener('click', function () {
-            setapplyConstraints(true);
+            setapplyConstraints(true, false);
         });
-        //設定鏡頭參數
-        function setapplyConstraints(light) {
+        //設定鏡頭參數，light電筒按鈕觸發=True、其他=False,focalfirst相機第一次開啟=True、其他=False
+        function setapplyConstraints(light, focalfirst) {
             try {
                 //取得影片元件串流
                 const stream = myvideo.srcObject;
@@ -480,6 +482,8 @@
                 if (stream != null) {
                     //擷取視訊軌道第一筆
                     const track = stream.getVideoTracks()[0];
+                    //取得視訊軌道個功能相關參數
+                    const capabilities = track.getCapabilities();
                     //取得視訊軌道目前設定
                     const settings = track.getSettings();
                     //建立一個空陣列用來儲存參數
@@ -489,11 +493,39 @@
                         console.log('焦距不支援: ' + track.label);
                     }
                     else {
+                        //如果相機第一次開啟，必須將將焦距參數做設定
+                        if (focalfirst) {
+                            //設定焦距參數
+                            focal.min = capabilities.zoom.min;
+                            focal.max = capabilities.zoom.max;
+                            focal.step = capabilities.zoom.step;
+                            var Focal = localStorage.getItem("Focal");
+                            //賦予當前焦距參數
+                            if (Focal != null) {
+                                if (Focal > capabilities.zoom.max) {
+                                    focal.value = capabilities.zoom.max;
+                                }
+                                else if (Focal < capabilities.zoom.min) {
+                                    focal.value = capabilities.zoom.min;
+                                }
+                                else {
+                                    focal.value = Focal;
+                                }
+                                localStorage.setItem("Focal", focal.value);
+                            }
+                            else {
+                                focal.value = settings.zoom;
+                            }
+                            focalvalue.innerHTML = focal.value;
+                        }
+
                         //新增焦距參數
                         advanced.push({
                             zoom: focal.value
                         });
                     }
+
+
                     //檢查是否可輸入手電筒參數
                     if (!('torch' in settings)) {
                         console.log('手電筒不支援: ' + track.label);
