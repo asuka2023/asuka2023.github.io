@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html>
+
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>掃描條碼(單筆)</title>
     <style>
         body {
             margin: 0;
@@ -58,445 +58,143 @@
         }
     </style>
 
+
 </head>
 
 <body>
 
-<video id="myVideo" style="display: none"></video>
-<canvas id="myCanvas"></canvas>
-<div id="divbottom">
-    <button type="button" id="setting" class="button btnsetting">設定</button>
-    <span
+    <video id="myVideo" style="display: none"></video>
+    <canvas id="myCanvas"></canvas>
+    <div id="divbottom">
+        <button type="button" id="setting" class="button btnsetting">設定</button> <span
             style="color:red;font-weight:bold">條碼:</span> <span id="barcodeValue"
-                                                                  style="color:red;font-weight:bold"></span>
-</div>
-<div class="content" style="display: none">
-    <p>條碼掃描:<span id="support"></span></p>
-    <p><label for="mediaDevices">鏡頭:</label><select id="mediaDevices" onchange="mediaDevices_onchange()"></select></p>
-    <p>掃瞄範圍</p>
-    <p><label for="scannerW">寬:</label><input type="range" step="10" min="50" class="slider" id="scannerW">(<span
-            id="scannerWvalue"></span>)
-    </p>
-    <p><label for="scannerH">長:</label><input type="range" step="10" min="50" class="slider" id="scannerH">(<span
-            id="scannerHvalue"></span>)
-    </p>
-    <p><label for="focal">焦距:</label><input type="range" class="slider" id="focal">(<span id="focalvalue"></span>)
-    </p>
-    <button class="button" id="torch">手電筒</button>
-    <!--<p>訊息:<span id="message"></span></p>-->
-    <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
-</div>
-<script>
-    //開關手電筒參數
-    var torch = false;
-    //設定掃描區域寬度元件變數
-    const scannerw = document.getElementById("scannerW");
-    const scannerwvalue = document.getElementById("scannerWvalue");
-    //顯示掃描區域寬度數值
-    showscannerwvalue();
-    //設定掃描區域長度元件變數
-    const scannerh = document.getElementById("scannerH");
-    const scannerhvalue = document.getElementById("scannerHvalue");
-    //顯示掃描區域長度數值
-    showscannerhvalue();
-    //設定畫布元件變數
-    const mycanvas = document.getElementById('myCanvas');
-    //設定影片元件變數
-    const myvideo = document.getElementById('myVideo');
-    //設定設定按鈕元件變數
-    const btn_setting = document.getElementById('setting');
-    //設定手電筒按鈕元件變數
-    const btn = document.getElementById('torch');
-    //設定鏡頭焦距元件變數
-    const focal = document.getElementById("focal");
-    const focalvalue = document.getElementById("focalvalue");
-    drawImge();
-    screen_orientation();
-    //document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
-    stopCamera();
-    /**
-     * 檢查瀏覽器是否有相機、麥克風、耳機等多媒裝置
-     */
-    if (!navigator.mediaDevices?.enumerateDevices) {
-        alert("瀏覽器不支援多媒體裝置");
-    } else {
-        //設定鏡頭選單元件變數
-        var sel = document.getElementById('mediaDevices');
-        //設定鏡頭選單項目元件變數
-        var opt = null;
-        navigator.mediaDevices
-            .enumerateDevices()
-            .then((devices) => {
-                //歷遍裝置內容
-                devices.forEach((device) => {
-                    //只要相機設備
-                    if (device.kind == "videoinput") {
-                        //將相機相關參數加入至選單
-                        opt = document.createElement('option');
-                        opt.value = device.deviceId;
-                        opt.innerHTML = device.label;
-                        sel.appendChild(opt);
-                    }
-                });
-                //相機選單最少要有一個鏡頭
-                if (sel.length > 0) {
-                    var selectcamera = localStorage.getItem("CameraId");
-                    //如果瀏覽器有紀錄上一次鏡頭就將選單指向該鏡頭
-                    if (selectcamera != null && selectcamera != '') {
-                        sel.value = selectcamera;
-                    }
-                    // 檢查瀏覽器條碼掃描是否支援
-                    if (!("BarcodeDetector" in globalThis)) {
-                        console.log("此瀏覽器不支援條碼掃描。");
-                        document.getElementById('support').innerHTML = '不支援';
-                    } else {
-                        console.log("此瀏覽器支援條碼掃描");
-                        document.getElementById('support').innerHTML = '支援';
-                        openCamera();
-
-                    }
-                }
-            })
-            .catch((err) => {
-                console.error(`${err.name}: ${err.message}`);
-                alert(`${err.name}: ${err.message}`);
-            });
-    }
-    //開啟相機
-    function openCamera() {
+            style="color:red;font-weight:bold"></span>
+    </div>
+    <div class="content" style="display: none">
+        <p>條碼掃描:<span id="support"></span></p>
+        <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange()"></select></p>
+        <p>掃瞄範圍</p>
+        <p>寬:<input type="range" step="10" min="50" class="slider" id="scannerW">(<span id="scannerWvalue"></span>)
+        </p>
+        <p>長:<input type="range" step="10" min="50" class="slider" id="scannerH">(<span id="scannerHvalue"></span>)
+        </p>
+        <p>焦距:<input type="range" class="slider" id="focal">(<span id="focalvalue"></span>)
+        </p>
+        <button class="button" id="torch">手電筒</button>
+        <!--<p>訊息:<span id="message"></span></p>-->
+        <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
+    </div>
+    <script>
+        //開關手電筒參數
+        var torch = false;
+        //設定掃描區域寬度元件變數
+        const scannerw = document.getElementById("scannerW");
+        const scannerwvalue = document.getElementById("scannerWvalue");
+        //顯示掃描區域寬度數值
+        showscannerwvalue();
+        //設定掃描區域長度元件變數
+        const scannerh = document.getElementById("scannerH");
+        const scannerhvalue = document.getElementById("scannerHvalue");
+        //顯示掃描區域長度數值
+        showscannerhvalue();
+        //設定畫布元件變數
+        const mycanvas = document.getElementById('myCanvas');
+        //設定影片元件變數
+        const myvideo = document.getElementById('myVideo');
+        //設定設定按鈕元件變數
+        const btn_setting = document.getElementById('setting');
+        //設定手電筒按鈕元件變數
+        const btn = document.getElementById('torch');
+        //設定鏡頭焦距元件變數
+        const focal = document.getElementById("focal");
+        const focalvalue = document.getElementById("focalvalue");
+        drawImge();
+        screen_orientation();
+        //document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
         stopCamera();
-        //設定開啟相機參數
-        var constraints = {
-            audio: false,
-            video: { frameRate: { min: 10, max: 30 }, deviceId: document.getElementById("mediaDevices").value, },
-        };
-        //  document.getElementById('cornerPoints').innerHTML = `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
-        //開啟相機 
-        navigator.mediaDevices
-            .getUserMedia(constraints)
-            .then(openCameraSuccess)
-            .catch(openCameraError);
-    }
-    //開啟相機成功
-    function openCameraSuccess(mediaStream) {
-        //將鏡頭串流賦予給影片元件
-        myvideo.srcObject = mediaStream;
-        setapplyConstraints(false, true);
-        /*
-        try {
-            //如果串流不等於NULL
-            if (mediaStream != null) {
-                //擷取視訊軌道第一筆
-                const track = mediaStream.getVideoTracks()[0];
-                //取得視訊軌道個功能相關參數
-                const capabilities = track.getCapabilities();
-                //取得視訊軌道目前設定
-                const settings = track.getSettings();
-                //檢查是否可輸入焦距參數
-                if (!('zoom' in settings)) {
-                    console.log('焦距不支援: ' + track.label);
-                }
-                else {
-                    //設定焦距參數
-                    focal.min = capabilities.zoom.min;
-                    focal.max = capabilities.zoom.max;
-                    focal.step = capabilities.zoom.step;
-                    var Focal = localStorage.getItem("Focal");
-                    //賦予當前焦距參數
-                    if (Focal != null) {
-                        if (Focal > capabilities.zoom.max) {
-                            focal.value = capabilities.zoom.max;
+       
+        //檢查瀏覽器是否有相機、麥克風、耳機等多媒裝置 
+        if (!navigator.mediaDevices?.enumerateDevices) {
+            alert("瀏覽器不支援多媒體裝置");
+        } else {
+            //設定鏡頭選單元件變數
+            var sel = document.getElementById('mediaDevices');
+            //設定鏡頭選單項目元件變數
+            var opt = null;
+            navigator.mediaDevices
+                .enumerateDevices()
+                .then((devices) => {
+                    //歷遍裝置內容
+                    devices.forEach((device) => {
+                        //只要相機設備
+                        if (device.kind == "videoinput") {
+                            //將相機相關參數加入至選單
+                            opt = document.createElement('option');
+                            opt.value = device.deviceId;
+                            opt.innerHTML = device.label;
+                            sel.appendChild(opt);
                         }
-                        else if (Focal < capabilities.zoom.min) {
-                            focal.value = capabilities.zoom.min;
+                    });
+                    //相機選單最少要有一個鏡頭
+                    if (sel.length > 0) {
+                        var selectcamera = localStorage.getItem("CameraId");
+                        //如果瀏覽器有紀錄上一次鏡頭就將選單指向該鏡頭
+                        if (selectcamera != null && selectcamera != '') {
+                            sel.value = selectcamera;
                         }
-                        else {
-                            focal.value = Focal;
+                        // 檢查瀏覽器條碼掃描是否支援
+                        if (!("BarcodeDetector" in globalThis)) {
+                            console.log("此瀏覽器不支援條碼掃描。");
+                            document.getElementById('support').innerHTML = '不支援';
+                        } else {
+                            console.log("此瀏覽器支援條碼掃描");
+                            document.getElementById('support').innerHTML = '支援';
+                            openCamera();
+
                         }
-                        localStorage.setItem("Focal", focal.value);
+                    }
+                })
+                .catch((err) => {
+                    console.error(`${err.name}: ${err.message}`);
+                    alert(`${err.name}: ${err.message}`);
+                });
+        }
+        //開啟相機
+        function openCamera() {
+            stopCamera();
+            //設定開啟相機參數
+            var constraints = {
+                audio: false,
+                video: { frameRate: { min: 10, max: 30 }, deviceId: document.getElementById("mediaDevices").value, },
+            };
+            //  document.getElementById('cornerPoints').innerHTML = `螢幕大小:[${window.visualViewport.width},${window.visualViewport.height}],畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
+            //開啟相機 
+            navigator.mediaDevices
+                .getUserMedia(constraints)
+                .then(openCameraSuccess)
+                .catch(openCameraError);
+        }
+        //開啟相機成功
+        function openCameraSuccess(mediaStream) {
+            //將鏡頭串流賦予給影片元件
+            myvideo.srcObject = mediaStream;
+            setapplyConstraints(false, true);
+            openFullscreen() ;
+            /*
+            try {
+                //如果串流不等於NULL
+                if (mediaStream != null) {
+                    //擷取視訊軌道第一筆
+                    const track = mediaStream.getVideoTracks()[0];
+                    //取得視訊軌道個功能相關參數
+                    const capabilities = track.getCapabilities();
+                    //取得視訊軌道目前設定
+                    const settings = track.getSettings();
+                    //檢查是否可輸入焦距參數
+                    if (!('zoom' in settings)) {
+                        console.log('焦距不支援: ' + track.label);
                     }
                     else {
-                        focal.value = settings.zoom;
-                    }
-                    focalvalue.innerHTML = focal.value;
-
-                }
-
-            }
-        } catch (err) {
-            console.log(err);
-            alert(err);
-        }*/
-    }
-    //開啟相機失敗
-    function openCameraError(err) {
-        console.error(`${err.name}: ${err.message}`);
-        //document.getElementById('message').innerHTML = `${err.name}: ${err.message}`;
-    }
-    //關閉相機串流
-    function stopCamera() {
-        try {
-            //取得影片元件串流
-            const stream = myvideo.srcObject;
-            //如果串流不等於NULL
-            if (stream != null) {
-                //擷取視訊軌道
-                const tracks = stream.getTracks();
-                //歷遍所有視訊並停止
-                tracks.forEach((track) => {
-                    track.stop();
-                });
-                //中斷影片串流
-                myvideo.srcObject = null;
-            }
-        } catch (err) {
-            console.log(err);
-            alert(err);
-        }
-    }
-    //切換相機
-    function mediaDevices_onchange() {
-        //關閉手電筒
-        torch = false;
-        //儲存相機ID，下次使用會先選擇此相機
-        localStorage.setItem("CameraId", document.getElementById("mediaDevices").value);
-        openCamera();
-    }
-    //依照螢幕方向決定影片尺寸
-    function screen_orientation() {
-        //垂直 畫布寬度設100% 高度設自動調整 ，水平 畫布寬度設自動調整 高度設100%
-        switch (screen.orientation.type) {
-            case "landscape-primary":
-            case "landscape-secondary":
-                mycanvas.style.width = "auto";
-                mycanvas.style.height = "100%";
-                break;
-            case "portrait-secondary":
-            case "portrait-primary":
-                mycanvas.style.width = "100%";
-                mycanvas.style.height = "auto";
-                break;
-            default:
-                //不存在上述條件
-                console.log(" orientation API 不支援此瀏覽器");
-        }
-    }
-    // 渲染畫面
-    function drawImge() {
-        try {
-            //取得影片元件串流
-            const stream = myvideo.srcObject;
-            //如果串流不等於NULL
-            if (stream != null) {
-                //在畫布上建立2D物件
-                var ctx = mycanvas.getContext('2d');
-                //變更canvas大小等於清空
-                mycanvas.width = myvideo.videoWidth;
-                mycanvas.height = myvideo.videoHeight;
-                //設定掃描區域寬度元件參數
-                scannerw.max = mycanvas.width;
-                //讀取儲存掃描區域寬度
-                var ScannerW = localStorage.getItem("ScannerW");
-                //當它存在
-                if (ScannerW != null) {
-                    //儲存寬度大於畫布寬度
-                    if (ScannerW > mycanvas.width) {
-                        //寬度元件賦予畫布寬度
-                        scannerw.value = mycanvas.width;
-                        setscannerwvalue();
-                    }
-                    //儲存寬度不等於畫布寬度
-                    else if (ScannerW != scannerw.value) {
-                        //寬度元件賦予畫布寬度
-                        scannerw.value = ScannerW;
-                        setscannerwvalue();
-                    }
-                }
-                showscannerwvalue();
-                //設定掃描區域長度元件參數 
-                scannerh.max = mycanvas.height;
-                //讀取儲存掃描區域高度
-                var ScannerH = localStorage.getItem("ScannerH");
-                //當它存在
-                if (ScannerH != null) {
-                    //儲存高度大於畫布高度
-                    if (ScannerH > mycanvas.height) {
-                        //高度元件賦予畫布高度
-                        scannerh.value = mycanvas.height;
-                        setscannerhvalue();
-                    }
-                    //儲存高度不等於畫布高度
-                    else if (ScannerH != scannerh.value) {
-                        //高度元件賦予畫布高度
-                        scannerh.value = ScannerH;
-                        setscannerhvalue();
-                    }
-                }
-                showscannerhvalue();
-                //將相機畫面渲染至canvas
-                ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
-                //計算出掃描區域的起始座標X
-                var scannerx = (mycanvas.width - scannerw.value) / 2;
-                //計算出掃描區域的起始座標Y
-                var scannery = (mycanvas.height - scannerh.value) / 2;
-                // mycanvas與掃描區域交集
-                let region = new Path2D();
-                region.rect(0, 0, mycanvas.width, mycanvas.height);
-                region.rect(scannerx, scannery, scannerw.value, scannerh.value);
-                ctx.clip(region, "evenodd");
-                //透明度
-                ctx.globalAlpha = 0.5;
-                //顏色
-                ctx.fillStyle = "black";
-                //填滿顏色區域
-                ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
-                //擷取出要掃描的區域
-                const myImageData = ctx.getImageData(scannerx, scannery, scannerw.value, scannerh.value);
-                // 建立條碼種類
-                var barcodeDetector = new BarcodeDetector({
-                    formats: ["code_128", "qr_code"],
-                });
-                // 清空條碼結果
-                document.getElementById('barcodeValue').innerHTML = '';
-                //檢測條碼
-                barcodeDetector
-                    .detect(myImageData)
-                    .then((barcodes) => {
-                        //條碼點位
-                        var cornerPoints = '';
-                        //條碼
-                        var result = '';
-                        //設定掃描區域大小
-                        ctx.rect(scannerx, scannery, scannerw.value, scannerh.value);
-                        //設定掃描區域外框粗細
-                        ctx.lineWidth = "10";
-                        //設定掃描區域外框顏色
-                        ctx.strokeStyle = "red";
-                        //當檢測出符合條碼的種類外框變綠色
-                        if (barcodes.length > 0) {
-                            //取得第一筆條碼結果
-                            var barcode = barcodes[0];
-                            //賦予條碼
-                            result += ` ${barcode.rawValue}, `;
-                            //賦予條碼點位
-                            cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
-                            cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
-                            //設定掃描區域外框顏色
-                            ctx.strokeStyle = "green";
-                        }
-                        //畫出可掃描區域
-                        ctx.stroke();
-                        //顯示結果
-                        document.getElementById('barcodeValue').innerHTML = `${result}`;
-                        document.getElementById('cornerPoints').innerHTML = cornerPoints;
-                        //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            }
-            else {
-                //變更canvas大小等於清空
-                mycanvas.width = window.visualViewport.width;
-                mycanvas.height = window.visualViewport.height;
-            }
-        } catch (err) {
-            console.log(err);
-            alert(err);
-        }
-        finally {
-            //不管成功失敗100毫秒後執行drawImge
-            setTimeout(drawImge, 100);
-        }
-    }
-    //儲存掃描區域寬度數值
-    function setscannerwvalue() {
-        if (scannerw.max > 100) {
-            localStorage.setItem("ScannerW", scannerw.value);
-        }
-    }
-    //儲存掃描區域長度數值
-    function setscannerhvalue() {
-        if (scannerh.max > 100) {
-            localStorage.setItem("ScannerH", scannerh.value);
-        }
-    }
-    //顯示掃描區域寬度數值
-    function showscannerwvalue() {
-        scannerwvalue.innerHTML = scannerw.value;
-    }
-    //顯示掃描區域長度數值
-    function showscannerhvalue() {
-        scannerhvalue.innerHTML = scannerh.value;
-    }
-    //當使用者移動掃描區域寬度
-    scannerw.addEventListener("input", (event) => {
-        setscannerwvalue();
-        showscannerwvalue();
-    });
-    //當使用者移動掃描區域高度
-    scannerh.addEventListener("input", (event) => {
-        setscannerhvalue();
-        showscannerhvalue();
-    });
-    //當使用者移動焦距
-    focal.addEventListener("input", (event) => {
-        setapplyConstraints(false, false);
-        localStorage.setItem("Focal", focal.value);
-        focalvalue.innerHTML = focal.value;
-    });
-    //監聽影片元件有資料進入就撥放，
-    myvideo.addEventListener("loadedmetadata", (event) => {
-        myvideo.play();
-    });
-    //監聽瀏覽器螢幕方向
-    screen.orientation.addEventListener("change", (event) => {
-        screen_orientation();
-        openCamera();
-    });
-    //開關設定畫面
-    btn_setting.addEventListener('click', function () {
-        try {
-            //設定設定畫面元件變數
-            const settingdiv = document.querySelector('.content');
-            //display狀態為none就更改為inline(顯示)，狀態為其他就更改為none(影藏)
-            if (settingdiv.style.display == "none") {
-                settingdiv.style.display = "inline";
-            }
-            else {
-                settingdiv.style.display = "none";
-            }
-        } catch (err) {
-            console.log(err);
-            alert(err);
-        }
-    });
-    //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
-    btn.addEventListener('click', function () {
-        setapplyConstraints(true, false);
-    });
-    //設定鏡頭參數，light電筒按鈕觸發=True、其他=False,focalfirst相機第一次開啟=True、其他=False
-    function setapplyConstraints(light, focalfirst) {
-        try {
-            //取得影片元件串流
-            const stream = myvideo.srcObject;
-            //如果串流不等於NULL
-            if (stream != null) {
-                //擷取視訊軌道第一筆
-                const track = stream.getVideoTracks()[0];
-                //取得視訊軌道個功能相關參數
-                const capabilities = track.getCapabilities();
-                //取得視訊軌道目前設定
-                const settings = track.getSettings();
-                //建立一個空陣列用來儲存參數
-                var advanced = [];
-                //檢查是否可輸入焦距參數
-                if (!('zoom' in settings)) {
-                    console.log('焦距不支援: ' + track.label);
-                }
-                else {
-                    //如果相機第一次開啟，必須將將焦距參數做設定
-                    if (focalfirst) {
                         //設定焦距參數
                         focal.min = capabilities.zoom.min;
                         focal.max = capabilities.zoom.max;
@@ -519,41 +217,363 @@
                             focal.value = settings.zoom;
                         }
                         focalvalue.innerHTML = focal.value;
+
                     }
 
-                    //新增焦距參數
-                    advanced.push({
-                        zoom: focal.value
-                    });
                 }
-
-
-                //檢查是否可輸入手電筒參數
-                if (!('torch' in settings)) {
-                    console.log('手電筒不支援: ' + track.label);
+            } catch (err) {
+                console.log(err);
+                alert(err);
+            }*/
+        }
+        //開啟相機失敗
+        function openCameraError(err) {
+            console.error(`${err.name}: ${err.message}`);
+            //document.getElementById('message').innerHTML = `${err.name}: ${err.message}`;
+        }
+        //關閉相機串流
+        function stopCamera() {
+            try {
+                //取得影片元件串流
+                const stream = myvideo.srcObject;
+                //如果串流不等於NULL
+                if (stream != null) {
+                    //擷取視訊軌道
+                    const tracks = stream.getTracks();
+                    //歷遍所有視訊並停止
+                    tracks.forEach((track) => {
+                        track.stop();
+                    });
+                    //中斷影片串流
+                    myvideo.srcObject = null;
+                }
+            } catch (err) {
+                console.log(err);
+                alert(err);
+            }
+        }
+        //切換相機
+        function mediaDevices_onchange() {
+            //關閉手電筒
+            torch = false;
+            //儲存相機ID，下次使用會先選擇此相機
+            localStorage.setItem("CameraId", document.getElementById("mediaDevices").value);
+            openCamera();
+        }
+        //依照螢幕方向決定影片尺寸
+        function screen_orientation() {
+            //垂直 畫布寬度設100% 高度設自動調整 ，水平 畫布寬度設自動調整 高度設100%
+            switch (screen.orientation.type) {
+                case "landscape-primary":
+                case "landscape-secondary":
+                    mycanvas.style.width = "auto";
+                    mycanvas.style.height = "100%";
+                    break;
+                case "portrait-secondary":
+                case "portrait-primary":
+                    mycanvas.style.width = "100%";
+                    mycanvas.style.height = "auto";
+                    break;
+                default:
+                    //不存在上述條件
+                    console.log(" orientation API 不支援此瀏覽器");
+            }
+        }
+        // 渲染畫面
+        function drawImge() {
+            try {
+                //取得影片元件串流
+                const stream = myvideo.srcObject;
+                //如果串流不等於NULL
+                if (stream != null) {
+                    //在畫布上建立2D物件
+                    var ctx = mycanvas.getContext('2d');
+                    //變更canvas大小等於清空
+                    mycanvas.width = myvideo.videoWidth;
+                    mycanvas.height = myvideo.videoHeight;
+                    //設定掃描區域寬度元件參數
+                    scannerw.max = mycanvas.width;
+                    //讀取儲存掃描區域寬度
+                    var ScannerW = localStorage.getItem("ScannerW");
+                    //當它存在
+                    if (ScannerW != null) {
+                        //儲存寬度大於畫布寬度
+                        if (ScannerW > mycanvas.width) {
+                            //寬度元件賦予畫布寬度
+                            scannerw.value = mycanvas.width;
+                            setscannerwvalue();
+                        }
+                        //儲存寬度不等於畫布寬度
+                        else if (ScannerW != scannerw.value) {
+                            //寬度元件賦予畫布寬度
+                            scannerw.value = ScannerW;
+                            setscannerwvalue();
+                        }
+                    }
+                    showscannerwvalue();
+                    //設定掃描區域長度元件參數 
+                    scannerh.max = mycanvas.height;
+                    //讀取儲存掃描區域高度
+                    var ScannerH = localStorage.getItem("ScannerH");
+                    //當它存在
+                    if (ScannerH != null) {
+                        //儲存高度大於畫布高度
+                        if (ScannerH > mycanvas.height) {
+                            //高度元件賦予畫布高度
+                            scannerh.value = mycanvas.height;
+                            setscannerhvalue();
+                        }
+                        //儲存高度不等於畫布高度
+                        else if (ScannerH != scannerh.value) {
+                            //高度元件賦予畫布高度
+                            scannerh.value = ScannerH;
+                            setscannerhvalue();
+                        }
+                    }
+                    showscannerhvalue();
+                    //將相機畫面渲染至canvas
+                    ctx.drawImage(myvideo, 0, 0, mycanvas.width, mycanvas.height);
+                    //計算出掃描區域的起始座標X
+                    var scannerx = (mycanvas.width - scannerw.value) / 2;
+                    //計算出掃描區域的起始座標Y
+                    var scannery = (mycanvas.height - scannerh.value) / 2;
+                    // mycanvas與掃描區域交集
+                    let region = new Path2D();
+                    region.rect(0, 0, mycanvas.width, mycanvas.height);
+                    region.rect(scannerx, scannery, scannerw.value, scannerh.value);
+                    ctx.clip(region, "evenodd");
+                    //透明度
+                    ctx.globalAlpha = 0.5;
+                    //顏色
+                    ctx.fillStyle = "black";
+                    //填滿顏色區域
+                    ctx.fillRect(0, 0, mycanvas.width, mycanvas.height);
+                    //擷取出要掃描的區域
+                    const myImageData = ctx.getImageData(scannerx, scannery, scannerw.value, scannerh.value);
+                    // 建立條碼種類
+                    var barcodeDetector = new BarcodeDetector({
+                        formats: ["code_128", "qr_code"],
+                    });
+                    // 清空條碼結果
+                    document.getElementById('barcodeValue').innerHTML = '';
+                    //檢測條碼
+                    barcodeDetector
+                        .detect(myImageData)
+                        .then((barcodes) => {
+                            //條碼點位
+                            var cornerPoints = '';
+                            //條碼
+                            var result = '';
+                            //設定掃描區域大小
+                            ctx.rect(scannerx, scannery, scannerw.value, scannerh.value);
+                            //設定掃描區域外框粗細
+                            ctx.lineWidth = "10";
+                            //設定掃描區域外框顏色
+                            ctx.strokeStyle = "red";
+                            //當檢測出符合條碼的種類外框變綠色
+                            if (barcodes.length > 0) {
+                                //取得第一筆條碼結果
+                                var barcode = barcodes[0];
+                                //賦予條碼
+                                result += ` ${barcode.rawValue}, `;
+                                //賦予條碼點位
+                                cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
+                                cornerPoints += `,[${mycanvas.offsetWidth},${mycanvas.offsetHeight}],[${myvideo.videoWidth},${myvideo.videoHeight}] `;
+                                //設定掃描區域外框顏色
+                                ctx.strokeStyle = "green";
+                            }
+                            //畫出可掃描區域
+                            ctx.stroke();
+                            //顯示結果
+                            document.getElementById('barcodeValue').innerHTML = `${result}`;
+                            document.getElementById('cornerPoints').innerHTML = cornerPoints;
+                            //document.getElementById('cornerPoints').innerHTML= `畫面顯示大小:[${myvideo.width},${myvideo.height}],相機畫面大小:[${myvideo.videoWidth},${myvideo.videoHeight}]`;
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 }
                 else {
-                    //如果是經由電筒按鈕觸發，必須將手電筒開關參數做反轉
-                    if (light) {
-                        torch = !torch;
-                    }
-                    //新增手電筒參數
-                    advanced.push({
-                        torch: torch
-                    });
-
+                    //變更canvas大小等於清空
+                    mycanvas.width = window.visualViewport.width;
+                    mycanvas.height = window.visualViewport.height;
                 }
-                //變更視訊軌道參數
-                track.applyConstraints({
-                    advanced: advanced
-                });
+            } catch (err) {
+                console.log(err);
+                alert(err);
             }
-        } catch (err) {
-            console.log(err);
-            alert(err);
+            finally {
+                //不管成功失敗100毫秒後執行drawImge
+                setTimeout(drawImge, 100);
+            }
         }
-    }
-</script>
+       
+        //儲存掃描區域寬度數值
+        function setscannerwvalue() {
+            if (scannerw.max > 100) {
+                localStorage.setItem("ScannerW", scannerw.value);
+            }
+        }
+        //儲存掃描區域長度數值
+        function setscannerhvalue() {
+            if (scannerh.max > 100) {
+                localStorage.setItem("ScannerH", scannerh.value);
+            }
+        }
+        //顯示掃描區域寬度數值
+        function showscannerwvalue() {
+            scannerwvalue.innerHTML = scannerw.value;
+        }
+        //顯示掃描區域長度數值
+        function showscannerhvalue() {
+            scannerhvalue.innerHTML = scannerh.value;
+        }
+        //當使用者移動掃描區域寬度
+        scannerw.addEventListener("input", (event) => {
+            setscannerwvalue();
+            showscannerwvalue();
+        });
+        //當使用者移動掃描區域高度
+        scannerh.addEventListener("input", (event) => {
+            setscannerhvalue();
+            showscannerhvalue();
+        });
+        //當使用者移動焦距
+        focal.addEventListener("input", (event) => {
+            setapplyConstraints(false, false);
+            localStorage.setItem("Focal", focal.value);
+            focalvalue.innerHTML = focal.value;
+        });
+        //監聽影片元件有資料進入就撥放，
+        myvideo.addEventListener("loadedmetadata", (event) => {
+            myvideo.play();
+        });
+        //監聽瀏覽器螢幕方向
+        screen.orientation.addEventListener("change", (event) => {
+            screen_orientation();
+            openCamera();
+        });
+        //開關設定畫面
+        btn_setting.addEventListener('click', function () {
+            try {
+                //設定設定畫面元件變數
+                const settingdiv = document.querySelector('.content');
+                //display狀態為none就更改為inline(顯示)，狀態為其他就更改為none(影藏)
+                if (settingdiv.style.display == "none") {
+                    settingdiv.style.display = "inline";
+                }
+                else {
+                    settingdiv.style.display = "none";
+                }
+            } catch (err) {
+                console.log(err);
+                alert(err);
+            }
+        });
+        //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
+        btn.addEventListener('click', function () {
+            setapplyConstraints(true, false);
+        });
+        //設定鏡頭參數，light電筒按鈕觸發=True、其他=False,focalfirst相機第一次開啟=True、其他=False
+        function setapplyConstraints(light, focalfirst) {
+            try {
+                //取得影片元件串流
+                const stream = myvideo.srcObject;
+                //如果串流不等於NULL
+                if (stream != null) {
+                    //擷取視訊軌道第一筆
+                    const track = stream.getVideoTracks()[0];
+                    //取得視訊軌道個功能相關參數
+                    const capabilities = track.getCapabilities();
+                    //取得視訊軌道目前設定
+                    const settings = track.getSettings();
+                    //建立一個空陣列用來儲存參數
+                    var advanced = [];
+                    //檢查是否可輸入焦距參數
+                    if (!('zoom' in settings)) {
+                        console.log('焦距不支援: ' + track.label);
+                    }
+                    else {
+                        //如果相機第一次開啟，必須將將焦距參數做設定
+                        if (focalfirst) {
+                            //設定焦距參數
+                            focal.min = capabilities.zoom.min;
+                            focal.max = capabilities.zoom.max;
+                            focal.step = capabilities.zoom.step;
+                            var Focal = localStorage.getItem("Focal");
+                            //賦予當前焦距參數
+                            if (Focal != null) {
+                                if (Focal > capabilities.zoom.max) {
+                                    focal.value = capabilities.zoom.max;
+                                }
+                                else if (Focal < capabilities.zoom.min) {
+                                    focal.value = capabilities.zoom.min;
+                                }
+                                else {
+                                    focal.value = Focal;
+                                }
+                                localStorage.setItem("Focal", focal.value);
+                            }
+                            else {
+                                focal.value = settings.zoom;
+                            }
+                            focalvalue.innerHTML = focal.value;
+                        }
+
+                        //新增焦距參數
+                        advanced.push({
+                            zoom: focal.value
+                        });
+                    }
+
+
+                    //檢查是否可輸入手電筒參數
+                    if (!('torch' in settings)) {
+                        console.log('手電筒不支援: ' + track.label);
+                    }
+                    else {
+                        //如果是經由電筒按鈕觸發，必須將手電筒開關參數做反轉
+                        if (light) {
+                            torch = !torch;
+                        }
+                        //新增手電筒參數
+                        advanced.push({
+                            torch: torch
+                        });
+
+                    }
+                    //變更視訊軌道參數
+                    track.applyConstraints({
+                        advanced: advanced
+                    });
+                }
+            } catch (err) {
+                console.log(err);
+                alert(err);
+            }
+        }
+        var elem = document.documentElement;
+        //開啟全螢幕
+        function openFullscreen() {
+        if (elem.requestFullscreen) {
+            elem.requestFullscreen();
+        } else if (elem.webkitRequestFullscreen) { /* Safari */
+            elem.webkitRequestFullscreen();
+        } else if (elem.msRequestFullscreen) { /* IE11 */
+            elem.msRequestFullscreen();
+        }
+        }
+        //關閉全螢幕
+        function closeFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { /* Safari */
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { /* IE11 */
+            document.msExitFullscreen();
+        }
+        } 
+    </script>
 </body>
 
 </html>
