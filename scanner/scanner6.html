@@ -179,7 +179,7 @@
             //將鏡頭串流賦予給影片元件
             myvideo.srcObject = mediaStream;
             setapplyConstraints(false, true);
-            openFullscreen() ;
+          
             /*
             try {
                 //如果串流不等於NULL
@@ -455,6 +455,7 @@
         });
         //開關設定畫面
         btn_setting.addEventListener('click', function () {
+            openFullscreen();
             try {
                 //設定設定畫面元件變數
                 const settingdiv = document.querySelector('.content');
