@@ -197,8 +197,25 @@
                         focal.min = capabilities.zoom.min;
                         focal.max = capabilities.zoom.max;
                         focal.step = capabilities.zoom.step;
+                        var Focal = localStorage.getItem("Focal");
                         //賦予當前焦距參數
-                        focal.value = settings.zoom;
+                        if (Focal != null) {
+                            if (Focal > capabilities.zoom.max) {
+                                focal.value = capabilities.zoom.max;
+                            }
+                            else if (Focal < capabilities.zoom.min) {
+                                focal.value = capabilities.zoom.min;
+                            }
+                            else {
+                                focal.value = Focal;
+                            }
+                            localStorage.setItem("Focal", focal.value);
+                        }
+                        else {
+                            focal.value = settings.zoom;
+                        }
+                        focalvalue.innerHTML = focal.value;
+
                     }
 
                 }
@@ -421,13 +438,13 @@
         //當使用者移動焦距
         focal.addEventListener("input", (event) => {
             setapplyConstraints(false);
+            localStorage.setItem("Focal", focal.value);
             focalvalue.innerHTML = focal.value;
         });
         //監聽影片元件有資料進入就撥放，
         myvideo.addEventListener("loadedmetadata", (event) => {
             myvideo.play();
         });
-
         //監聽瀏覽器螢幕方向
         screen.orientation.addEventListener("change", (event) => {
             screen_orientation();
@@ -501,7 +518,7 @@
                 console.log(err);
                 alert(err);
             }
-        }
+        } 
     </script>
 </body>
 
