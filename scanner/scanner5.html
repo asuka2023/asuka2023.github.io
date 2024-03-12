@@ -277,11 +277,15 @@
                 case "landscape-secondary":
                     mycanvas.style.width = "auto";
                     mycanvas.style.height = "100%";
+                    barcodecanvas.style.width = "auto";
+                    barcodecanvas.style.height = "100%";
                     break;
                 case "portrait-secondary":
                 case "portrait-primary":
                     mycanvas.style.width = "100%";
                     mycanvas.style.height = "auto";
+                    barcodecanvas.style.width = "auto";
+                    barcodecanvas.style.height = "100%";
                     break;
                 default:
                     //不存在上述條件
@@ -541,14 +545,11 @@
                             }
                             focalvalue.innerHTML = focal.value;
                         }
-
                         //新增焦距參數
                         advanced.push({
                             zoom: focal.value
                         });
                     }
-
-
                     //檢查是否可輸入手電筒參數
                     if (!('torch' in settings)) {
                         console.log('手電筒不支援: ' + track.label);
