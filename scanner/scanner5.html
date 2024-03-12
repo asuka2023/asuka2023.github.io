@@ -369,6 +369,14 @@
                     document.getElementById('barcodeValue').innerHTML = '';
                     //在畫布上建立2D物件
                     var ctxbarocde = barcodecanvas.getContext('2d');
+                     //設定掃描區域大小
+                     ctxbarocde.rect(scannerx, scannery, scannerw.value, scannerh.value);
+                            //設定掃描區域外框粗細
+                            ctxbarocde.lineWidth = "10";
+                            //設定掃描區域外框顏色
+                            ctxbarocde.strokeStyle = "red";
+                             //畫出可掃描區域
+                             ctx.stroke();
                     //檢測條碼
                     barcodeDetector
                         .detect(myImageData)
@@ -382,6 +390,7 @@
                                 console.log(barcode.rawValue); 
                                 //賦予條碼
                                 result += ` ${barcode.rawValue}, `;  
+                                /*
                                  //賦予條碼點位
                                 cornerPoints += ` [${barcode.boundingBox.x}, ${barcode.boundingBox.y},${barcode.boundingBox.width},${barcode.boundingBox.height}]  `;
                                // cornerPoints += ` [${barcode.boundingBox.x * xscale}, ${barcode.boundingBox.y * yscale},${barcode.boundingBox.width * xscale},${barcode.boundingBox.height * yscale}]  `;
@@ -394,6 +403,7 @@
                                  ctxbarocde.strokeStyle = "green"; 
                                 //畫出可掃描區域
                                 ctxbarocde.stroke();
+                                */
                             });
                      
                             //顯示結果
