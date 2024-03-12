@@ -17,6 +17,13 @@
             left: 50%;
             transform: translate(-50%);
         }
+        #barcodeCanvas {
+            position: fixed;
+            top: 0;
+            background: rgba(0, 0, 0, 0);
+            left: 50%;
+            transform: translate(-50%);
+        }
 
         .content {
             background: rgba(255, 255, 255, 0.5);
@@ -65,6 +72,7 @@
 
     <video id="myVideo" style="display: none"></video>
     <canvas id="myCanvas"></canvas>
+    <canvas id="barcodeCanvas"></canvas>
     <div id="divbottom">
         <button type="button" id="setting" class="button btnsetting">設定</button> <span
             style="color:red;font-weight:bold">條碼:</span> <span id="barcodeValue"
@@ -99,6 +107,8 @@
         showscannerhvalue();
         //設定畫布元件變數
         const mycanvas = document.getElementById('myCanvas');
+          //設定條碼外框畫布元件變數
+          const barcodecanvas = document.getElementById('barcodeCanvas');
         //設定影片元件變數
         const myvideo = document.getElementById('myVideo');
         //設定設定按鈕元件變數
@@ -290,6 +300,8 @@
                     //變更canvas大小等於清空
                     mycanvas.width = myvideo.videoWidth;
                     mycanvas.height = myvideo.videoHeight;
+                    barcodecanvas.width = myvideo.videoWidth;
+                    barcodecanvas.height = myvideo.videoHeight;
                     //設定掃描區域寬度元件參數
                     scannerw.max = mycanvas.width;
                     //讀取儲存掃描區域寬度
@@ -356,7 +368,7 @@
                     // 清空條碼結果
                     document.getElementById('barcodeValue').innerHTML = '';
                     //在畫布上建立2D物件
-                    var ctxbarocde = mycanvas.getContext('2d');
+                    var ctxbarocde = barcodecanvas.getContext('2d');
                     //檢測條碼
                     barcodeDetector
                         .detect(myImageData)
