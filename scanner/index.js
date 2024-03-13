@@ -552,6 +552,6 @@ function drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, poi
     }
     finally {
         //不管成功失敗100毫秒後執行drawImge
-        setTimeout(drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, pointvalueId), 100);
+        setTimeout(function() {drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, pointvalueId)}, 100);
     }
 }
