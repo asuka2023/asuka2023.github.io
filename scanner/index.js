@@ -89,7 +89,7 @@ function getDevices(devices, selectId) {
         }
         else {
             
-            return false;
+            return true;
         }
     }
     catch (err) {
