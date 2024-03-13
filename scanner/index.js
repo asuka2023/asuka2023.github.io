@@ -205,7 +205,7 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
              
                 //新增手電筒參數
                 advanced.push({
-                    torch: flashlight
+                    torch: false
                 });
                 
             }
