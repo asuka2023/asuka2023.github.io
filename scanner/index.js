@@ -412,7 +412,9 @@ function intiaddEventListener(scannerwId, scannerhId, focalId, videoId, settingI
 
 // 渲染畫面
 function drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, pointvalueId) {
-    try {
+    try { 
+    //設定畫布元件變數
+            const mycanvas = document.getElementById(canvasId);
         //設定顯示條碼結果元件變數
         const barcodevalue = document.getElementById(barcodevalueId);
          //設定顯示條碼結果點位元件變數
@@ -423,8 +425,7 @@ function drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, poi
         const stream = myvideo.srcObject;
         //如果串流不等於NULL
         if (stream != null) {
-            //設定畫布元件變數
-            const mycanvas = document.getElementById(canvasId);
+           
             //在畫布上建立2D物件
             var ctx = mycanvas.getContext('2d');
             //變更canvas大小等於清空
