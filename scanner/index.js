@@ -458,6 +458,8 @@ function drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, poi
                 }
             }
             showscannervalue(scannerwId);
+             //設定掃描區域長度元件變數
+             const scannerh = document.getElementById(scannerhId);
             //設定掃描區域長度元件參數 
             scannerh.max = mycanvas.height;
             //讀取儲存掃描區域高度
