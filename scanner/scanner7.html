@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="index.css" rel="stylesheet">
-    <script src="index.js?v=2"></script>
+    <script src="index.js"></script>
 </head>
 
 <body>
@@ -23,12 +23,12 @@
             <button type="button" id="setting" class="buttonicon btnsetting"> <span
                     class="material-symbols-sharp">settings</span></button>
         </div>
-        <span style="color:red;font-weight:bold">條碼:</span> <span id="barcodeValue"
-            style="color:red;font-weight:bold"></span> 
-        <p>條碼掃描:<span id="support" style="color:white;font-weight:bold"></span></p>
+        <span style="color:white;font-weight:bold">條碼:</span> <span id="barcodeValue"
+            style="color:red;font-weight:bold"></span>
+            <p>條碼掃描:<span id="support" style="color:white;font-weight:bold"></span></p>
     </div>
     <div class="content" style="display: none">
-       
+        
         <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange('mediaDevices','myVideo','focal')"></select></p>
         <p>掃瞄範圍</p>
         <p>寬:<input type="range" step="10" min="50" class="slider" id="scannerW">(<span id="scannerWvalue"></span>)
@@ -43,6 +43,7 @@
 
     </div>
     <script>
+
         /*
         //開關手電筒參數
         var torch = false;
@@ -69,18 +70,18 @@
         //設定鏡頭焦距元件變數
         const focal = document.getElementById("focal");
         const focalvalue = document.getElementById("focalvalue");
-      */
+        */
+
         screen_orientation('myCanvas');
         //document.getElementById('cornerPoints').innerHTML = `畫面放大縮小比例:[${window.visualViewport.scale}],畫面顯示大小:[${myvideo.width},${myvideo.height}],螢幕方向: ${screen.orientation.type}, 旋轉角度:${screen.orientation.angle}`;
         stopCamera('myVideo');
-
-        if (!checkEnumerateDevices('mediaDevices')) {
+       var checkenumeratedevices = checkEnumerateDevices('mediaDevices');
+       alert(`相機設備:${checkenumeratedevices}`);
+        if (!checkenumeratedevices) {
             document.getElementById('support').innerHTML = '不支援';
-          
         }
         else {
             document.getElementById('support').innerHTML = '支援';
-
             openCamera('mediaDevices', 'myVideo', 'focal', 'focalvalue');
          
             drawImge('scannerW', 'scannerH', 'myVideo', 'myCanvas', 'barcodeValue', 'cornerPoints');
