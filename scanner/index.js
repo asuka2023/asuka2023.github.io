@@ -194,7 +194,7 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
                 });
             }   
             if (checkTorch(settings, track)) {
-               var flashlight =  localStorage.getItem("Torch");
+               var flashlight =  localStorage.getItem("Torch") == "true";
           
                 //如果是經由電筒按鈕觸發，必須將手電筒開關參數做反轉
                 if (light) {
@@ -205,7 +205,7 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
              
                 //新增手電筒參數
                 advanced.push({
-                    torch: false
+                    torch: flashlight
                 });
                 
             }
