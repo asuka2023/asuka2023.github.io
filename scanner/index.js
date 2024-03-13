@@ -44,7 +44,9 @@ function checkEnumerateDevices(selectId) {
             navigator.mediaDevices
                 .enumerateDevices()
                 .then((devices) => {
-                    return getDevices(devices, selectId);
+                    var result = getDevices(devices, selectId);
+                    alert(result);
+                    return result;
                 })
                 .catch((err) => {
                     console.error(`${err.name}: ${err.message}`);
