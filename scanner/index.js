@@ -82,7 +82,7 @@ function getDevices(devices, selectId) {
         }
         else {
             
-            return true;
+            return false;
         }
     }
     catch (err) {
@@ -125,7 +125,7 @@ async function openCamera(selectId, videoId, focalId) {
         openCameraSuccess(stream, videoId, focalId);
     }
     catch (err) {
-        console.error(`${err.name}: ${err.message}`);
+        console.log(`${err.name}: ${err.message}`);
     }
   
 }
@@ -139,13 +139,13 @@ function openCameraSuccess(mediaStream, videoId, focalId) {
     setapplyConstraints(false, true, videoId, focalId);
 
 }
-
+/*
 //開啟相機失敗
 function openCameraError(err) {
     console.error(`${err.name}: ${err.message}`);
 
 }
-
+*/
 //關閉相機串流
 function stopCamera(videoId) {
     try {
@@ -187,13 +187,13 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
             const settings = track.getSettings();
             //建立一個空陣列用來儲存參數
             var advanced = [];
-            if (checkZoom(focalfirst, focalId, capabilities, settings)) {
+            if (checkZoom(focalfirst, focalId, capabilities, settings,track)) {
                 //新增焦距參數
                 advanced.push({
                     zoom: localStorage.getItem("Focal")
                 });
             }
-            if (checkTorch(settings)) {
+            if (checkTorch(settings,track)) {
                 //如果是經由電筒按鈕觸發，必須將手電筒開關參數做反轉
                 if (light) {
                     torch = !torch;
@@ -215,7 +215,7 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
 }
 
 //檢查是否可輸入焦距參數
-function checkZoom(focalfirst, focalId, capabilities, settings) {
+function checkZoom(focalfirst, focalId, capabilities, settings,track) {
     if (!('zoom' in settings)) {
         console.log('焦距不支援: ' + track.label);
         return false;
@@ -254,7 +254,7 @@ function checkZoom(focalfirst, focalId, capabilities, settings) {
 }
 
 //檢查是否可輸入手電筒參數
-function checkTorch(settings) {
+function checkTorch(settings,track) {
 
     if (!('torch' in settings)) {
         console.log('手電筒不支援: ' + track.label);
