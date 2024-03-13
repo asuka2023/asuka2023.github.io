@@ -112,20 +112,22 @@ function checkBarcodeSupport() {
 }
 
 //開啟相機
-function openCamera(selectId, videoId, focalId) {
+async function openCamera(selectId, videoId, focalId) {
     stopCamera(videoId);
     //設定開啟相機參數
     var constraints = {
         audio: false,
         video: { frameRate: { min: 10, max: 30 }, deviceId: document.getElementById(selectId).value, },
-    };
-    //開啟相機 
-    navigator.mediaDevices
-        .getUserMedia(constraints)
-        .then((stream) => {
-            openCameraSuccess(stream, videoId, focalId);
-        })
-        .catch(openCameraError);
+    }; 
+     //開啟相機 
+    try{
+        var  stream = await navigator.mediaDevices.getUserMedia(constraints); 
+        openCameraSuccess(stream, videoId, focalId);
+    }
+    catch (err) {
+        console.error(`${err.name}: ${err.message}`);
+    }
+  
 }
 
 //開啟相機成功
