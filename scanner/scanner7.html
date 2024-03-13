@@ -82,10 +82,10 @@
             document.getElementById('support').innerHTML = '支援';
 
             openCamera('mediaDevices', 'myVideo', 'focal', 'focalvalue');
-            intiaddEventListener('scannerW', 'scannerH', 'focal', 'myVideo', 'setting', 'torch', 'fullscreen', 'mediaDevices');
+         
             drawImge('scannerW', 'scannerH', 'myVideo', 'myCanvas', 'barcodeValue', 'cornerPoints');
         }
-
+   intiaddEventListener('scannerW', 'scannerH', 'focal', 'myVideo', 'setting', 'torch', 'fullscreen', 'mediaDevices');
         /*
         //檢查瀏覽器是否有相機、麥克風、耳機等多媒裝置 
         if (!navigator.mediaDevices?.enumerateDevices) {
