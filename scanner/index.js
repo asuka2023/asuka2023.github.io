@@ -40,9 +40,8 @@ async function checkEnumerateDevices(selectId) {
             alert("瀏覽器不支援多媒體裝置");
             return false;
         } else {
-         var  devices = await navigator.mediaDevices.enumerateDevices();
-         return getDevices(devices, selectId);
-          
+            var devices = await navigator.mediaDevices.enumerateDevices();
+            return getDevices(devices, selectId);
         }
     }
     catch (err) {
@@ -70,7 +69,6 @@ function getDevices(devices, selectId) {
                 sel.appendChild(opt);
             }
         });
-        alert(`sel.length:${sel.length}`);
         //相機選單最少要有一個鏡頭
         if (sel.length > 0) {
             var selectcamera = localStorage.getItem("CameraId");
@@ -81,7 +79,7 @@ function getDevices(devices, selectId) {
             return true;
         }
         else {
-            
+
             return false;
         }
     }
@@ -107,6 +105,7 @@ function checkBarcodeSupport() {
         }
     }
     catch (err) {
+        console.log("此瀏覽器不支援條碼掃描。");
         return false;
     }
 }
@@ -118,16 +117,16 @@ async function openCamera(selectId, videoId, focalId) {
     var constraints = {
         audio: false,
         video: { frameRate: { min: 10, max: 30 }, deviceId: document.getElementById(selectId).value, },
-    }; 
-     //開啟相機 
-    try{
-        var  stream = await navigator.mediaDevices.getUserMedia(constraints); 
+    };
+    //開啟相機 
+    try {
+        var stream = await navigator.mediaDevices.getUserMedia(constraints);
         openCameraSuccess(stream, videoId, focalId);
     }
     catch (err) {
         console.log(`${err.name}: ${err.message}`);
     }
-  
+
 }
 
 //開啟相機成功
@@ -187,16 +186,19 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
             const settings = track.getSettings();
             //建立一個空陣列用來儲存參數
             var advanced = [];
-            if (checkZoom(focalfirst, focalId, capabilities, settings,track)) {
+            if (checkZoom(focalfirst, focalId, capabilities, settings, track)) {
                 //新增焦距參數
                 advanced.push({
                     zoom: localStorage.getItem("Focal")
                 });
             }
-            if (checkTorch(settings,track)) {
+            if (checkTorch(settings, track)) {
+               var torch =  localStorage.getItem("Torch");
                 //如果是經由電筒按鈕觸發，必須將手電筒開關參數做反轉
                 if (light) {
+                    
                     torch = !torch;
+                    localStorage.setItem("Torch", torch);
                 }
                 //新增手電筒參數
                 advanced.push({
@@ -215,7 +217,7 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
 }
 
 //檢查是否可輸入焦距參數
-function checkZoom(focalfirst, focalId, capabilities, settings,track) {
+function checkZoom(focalfirst, focalId, capabilities, settings, track) {
     if (!('zoom' in settings)) {
         console.log('焦距不支援: ' + track.label);
         return false;
@@ -254,7 +256,7 @@ function checkZoom(focalfirst, focalId, capabilities, settings,track) {
 }
 
 //檢查是否可輸入手電筒參數
-function checkTorch(settings,track) {
+function checkTorch(settings, track) {
 
     if (!('torch' in settings)) {
         console.log('手電筒不支援: ' + track.label);
@@ -269,7 +271,8 @@ function checkTorch(settings,track) {
 //切換相機
 function mediaDevices_onchange(selectId, videoId, focalId) {
     //關閉手電筒
-    torch = false;
+    localStorage.setItem("Torch", false);
+
     //儲存相機ID，下次使用會先選擇此相機
     localStorage.setItem("CameraId", document.getElementById(selectId).value);
     openCamera(selectId, videoId, focalId,);
@@ -315,7 +318,7 @@ function showscannervalue(scannerId) {
 }
 
 //初始化監聽器
-function intiaddEventListener(scannerwId, scannerhId, focalId, videoId, settingId, torchId, fullscreenId,canvasId,selectId) {
+function intiaddEventListener(scannerwId, scannerhId, focalId, videoId, settingId, torchId, fullscreenId, canvasId, selectId) {
     //設定掃描區域寬度元件變數
     const scannerw = document.getElementById(scannerwId);
     //顯示掃描區域寬度數值
@@ -412,20 +415,20 @@ function intiaddEventListener(scannerwId, scannerhId, focalId, videoId, settingI
 
 // 渲染畫面
 function drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, pointvalueId) {
-    try { 
-    //設定畫布元件變數
-            const mycanvas = document.getElementById(canvasId);
+    try {
+        //設定畫布元件變數
+        const mycanvas = document.getElementById(canvasId);
         //設定顯示條碼結果元件變數
         const barcodevalue = document.getElementById(barcodevalueId);
-         //設定顯示條碼結果點位元件變數
-         const pointvalue = document.getElementById(pointvalueId);
+        //設定顯示條碼結果點位元件變數
+        const pointvalue = document.getElementById(pointvalueId);
         //設定影片元件變數
         const myvideo = document.getElementById(videoId);
         //取得影片元件串流
         const stream = myvideo.srcObject;
         //如果串流不等於NULL
         if (stream != null) {
-           
+
             //在畫布上建立2D物件
             var ctx = mycanvas.getContext('2d');
             //變更canvas大小等於清空
