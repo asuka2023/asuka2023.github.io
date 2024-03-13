@@ -194,6 +194,7 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
             }
             if (checkTorch(settings, track)) {
                var torch =  localStorage.getItem("Torch");
+               alert(`手電筒狀態:{torch}`);
                 //如果是經由電筒按鈕觸發，必須將手電筒開關參數做反轉
                 if (light) {
                     

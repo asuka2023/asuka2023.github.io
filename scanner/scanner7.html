@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="index.css" rel="stylesheet">
-    <script src="index.js?v=10"></script>
+    <script src="index.js?v=11"></script>
 </head>
 
 <body>
@@ -43,7 +43,8 @@
 
     </div>
     <script>
-
+        //關閉手電筒
+        localStorage.setItem("Torch", false);
 
         screen_orientation('myCanvas');
         stopCamera('myVideo');
