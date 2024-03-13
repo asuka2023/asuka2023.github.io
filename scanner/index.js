@@ -344,7 +344,7 @@ function intiaddEventListener(scannerwId, scannerhId, focalId, videoId, settingI
     const focalvalue = document.getElementById(`${focalId}value`);
     //當使用者移動焦距
     focal.addEventListener("input", (event) => {
-        setapplyConstraints(false, false);
+        setapplyConstraints(false, false, videoId, focalId);
         localStorage.setItem("Focal", focal.value);
         focalvalue.innerHTML = focal.value;
     });
@@ -375,10 +375,10 @@ function intiaddEventListener(scannerwId, scannerhId, focalId, videoId, settingI
         }
     });
     //設定手電筒按鈕元件變數
-    const btn = document.getElementById(torchId);
+    const btn_torch = document.getElementById(torchId);
     //監聽按鈕手電筒，如果手機有多顆鏡頭不會每個鏡頭都能開手電筒
-    btn.addEventListener('click', function () {
-        setapplyConstraints(true, false);
+    btn_torch.addEventListener('click', function () {
+        setapplyConstraints(true, false, videoId, focalId);
     });
     //設定全螢幕按鈕元件變數
     const btn_fullscreen = document.getElementById(fullscreenId);
@@ -408,9 +408,6 @@ function intiaddEventListener(scannerwId, scannerhId, focalId, videoId, settingI
         screen_orientation(canvasId);
         openCamera(selectId, videoId, focalId);
     });
-
-
-
 }
 
 // 渲染畫面

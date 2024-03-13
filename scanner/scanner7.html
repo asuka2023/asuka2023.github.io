@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="index.css" rel="stylesheet">
-    <script src="index.js?v=9"></script>
+    <script src="index.js?v=10"></script>
 </head>
 
 <body>
@@ -25,10 +25,10 @@
         </div>
         <span style="color:white;font-weight:bold">條碼:</span> <span id="barcodeValue"
             style="color:red;font-weight:bold"></span>
-        <p>條碼掃描:<span id="support" style="color:white;font-weight:bold"></span></p>
+
     </div>
     <div class="content" style="display: none">
-
+        <p>條碼掃描:<span id="support"></span></p>
         <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange('mediaDevices','myVideo','focal')"></select></p>
         <p>掃瞄範圍</p>
         <p>寬:<input type="range" step="10" min="50" class="slider" id="scannerW">(<span id="scannerWvalue"></span>)
