@@ -202,11 +202,12 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
                     torch = !torch;
                     localStorage.setItem("Torch", torch);
                 } 
-                    alert(`手電筒狀態:${torch}`);
+                /*
                 //新增手電筒參數
                 advanced.push({
                     torch: torch
                 });
+                */
             }
             //變更視訊軌道參數
             track.applyConstraints({
