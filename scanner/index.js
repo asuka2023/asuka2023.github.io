@@ -77,6 +77,7 @@ function getDevices(devices, selectId) {
                 sel.appendChild(opt);
             }
         });
+        alert(`sel.length:${sel.length}`);
         //相機選單最少要有一個鏡頭
         if (sel.length > 0) {
             var selectcamera = localStorage.getItem("CameraId");
@@ -87,6 +88,7 @@ function getDevices(devices, selectId) {
             return true;
         }
         else {
+            
             return false;
         }
     }
