@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="index.css" rel="stylesheet">
-    <script src="index.js?v=14"></script>
+    <script src="index.js?v=17"></script>
 </head>
 
 <body>
@@ -42,17 +42,19 @@
         <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
 
     </div>
-    <script>
+    <script  type="module">
         //關閉手電筒
         localStorage.setItem("Torch", false);
 
         screen_orientation('myCanvas');
         stopCamera('myVideo');
-
-        if (!checkEnumerateDevices('mediaDevices')) {
+        const checkenumeratedevices = await checkEnumerateDevices('mediaDevices')
+        if (!checkenumeratedevices) {
+            console.log('not support');
             document.getElementById('support').innerHTML = '不支援';
         }
         else {
+            console.log('support');
             document.getElementById('support').innerHTML = '支援';
             openCamera('mediaDevices', 'myVideo', 'focal', 'focalvalue');
             intiaddEventListener('scannerW', 'scannerH', 'focal', 'myVideo', 'setting', 'torch', 'fullscreen', 'myCanvas', 'mediaDevices');

@@ -76,10 +76,11 @@ function getDevices(devices, selectId) {
             if (selectcamera != null && selectcamera != '') {
                 sel.value = selectcamera;
             }
+            console.log('sel.length > 0');
             return true;
         }
         else {
-
+            console.log('sel.length < 0');
             return false;
         }
     }
@@ -124,7 +125,7 @@ async function openCamera(selectId, videoId, focalId) {
         openCameraSuccess(stream, videoId, focalId);
     }
     catch (err) {
-        console.log(`${err.name}: ${err.message}`);
+        console.error(`${err.name}: ${err.message}`);
     }
 
 }
