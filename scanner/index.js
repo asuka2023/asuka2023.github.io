@@ -34,28 +34,19 @@ function checkFullscreen() {
 }
 
 //檢查瀏覽器是否有相機、麥克風、耳機等多媒裝置 
-function checkEnumerateDevices(selectId) {
+async function checkEnumerateDevices(selectId) {
     try {
         if (!navigator.mediaDevices?.enumerateDevices) {
             alert("瀏覽器不支援多媒體裝置");
             return false;
         } else {
-
-            navigator.mediaDevices
-                .enumerateDevices()
-                .then((devices) => {
-                    var result = getDevices(devices, selectId);
-                    alert(result);
-                    return result;
-                })
-                .catch((err) => {
-                    console.error(`${err.name}: ${err.message}`);
-                    alert(`${err.name}: ${err.message}`);
-                    return false;
-                });
+         var  devices = await navigator.mediaDevices.enumerateDevices();
+         return getDevices(devices, selectId);
+          
         }
     }
     catch (err) {
+        console.error(`${err.name}: ${err.message}`);
         alert(`${err.name}: ${err.message}`);
         return false;
     }
