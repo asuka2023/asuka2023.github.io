@@ -347,10 +347,11 @@ function intiaddEventListener(scannerwId, scannerhId, focalId, videoId, settingI
     const focal = document.getElementById(focalId);
     const focalvalue = document.getElementById(`${focalId}value`);
     //當使用者移動焦距
-    focal.addEventListener("input", (event) => {
-        setapplyConstraints(false, false, videoId, focalId);
-        localStorage.setItem("Focal", focal.value);
+    focal.addEventListener("input", (event) => {   
+             localStorage.setItem("Focal", focal.value);
         focalvalue.innerHTML = focal.value;
+        setapplyConstraints(false, false, videoId, focalId);
+
     });
 
     //設定影片元件變數
