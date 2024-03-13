@@ -192,23 +192,23 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
                 advanced.push({
                     zoom: localStorage.getItem("Focal")
                 });
-            }   /*
+            }   
             if (checkTorch(settings, track)) {
-               var torch =  localStorage.getItem("Torch");
+               var flashlight =  localStorage.getItem("Torch");
           
                 //如果是經由電筒按鈕觸發，必須將手電筒開關參數做反轉
                 if (light) {
                     
-                    torch = !torch;
-                    localStorage.setItem("Torch", torch);
+                    flashlight = !flashlight;
+                    localStorage.setItem("Torch", flashlight);
                 } 
              
                 //新增手電筒參數
                 advanced.push({
-                    torch: torch
+                    torch: flashlight
                 });
                 
-            }*/
+            }
             //變更視訊軌道參數
             track.applyConstraints({
                 advanced: advanced
