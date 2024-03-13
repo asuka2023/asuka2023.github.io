@@ -76,11 +76,11 @@ function getDevices(devices, selectId) {
             if (selectcamera != null && selectcamera != '') {
                 sel.value = selectcamera;
             }
-            console.log('sel.length > 0');
+           
             return true;
         }
         else {
-            console.log('sel.length < 0');
+      
             return false;
         }
     }
@@ -192,7 +192,7 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
                 advanced.push({
                     zoom: localStorage.getItem("Focal")
                 });
-            }
+            }   /*
             if (checkTorch(settings, track)) {
                var torch =  localStorage.getItem("Torch");
           
@@ -202,13 +202,13 @@ function setapplyConstraints(light, focalfirst, videoId, focalId) {
                     torch = !torch;
                     localStorage.setItem("Torch", torch);
                 } 
-                /*
+             
                 //新增手電筒參數
                 advanced.push({
                     torch: torch
                 });
-                */
-            }
+                
+            }*/
             //變更視訊軌道參數
             track.applyConstraints({
                 advanced: advanced

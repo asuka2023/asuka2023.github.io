@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="index.css" rel="stylesheet">
-    <script src="index.js?v=18"></script>
+    <script src="index.js?v=20"></script>
 </head>
 
 <body>
@@ -50,11 +50,11 @@
         stopCamera('myVideo');
         const checkenumeratedevices = await checkEnumerateDevices('mediaDevices')
         if (!checkenumeratedevices) {
-            console.log('not support');
+           
             document.getElementById('support').innerHTML = '不支援';
         }
         else {
-            console.log('support');
+            
             document.getElementById('support').innerHTML = '支援';
             openCamera('mediaDevices', 'myVideo', 'focal', 'focalvalue');
             intiaddEventListener('scannerW', 'scannerH', 'focal', 'myVideo', 'setting', 'torch', 'fullscreen', 'myCanvas', 'mediaDevices');
