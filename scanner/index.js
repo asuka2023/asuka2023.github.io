@@ -54,6 +54,7 @@ function checkEnumerateDevices(selectId) {
         }
     }
     catch (err) {
+        alert(`${err.name}: ${err.message}`);
         return false;
     }
 }
@@ -90,6 +91,7 @@ function getDevices(devices, selectId) {
         }
     }
     catch (err) {
+        alert(`${err.name}: ${err.message}`);
         return false;
     }
 
