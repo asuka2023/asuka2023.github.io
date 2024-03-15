@@ -574,7 +574,7 @@ function drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, poi
         }
     } catch (err) {
         console.log(err);
-        alert(err);
+
     }
     finally {
         //不管成功失敗100毫秒後執行drawImge

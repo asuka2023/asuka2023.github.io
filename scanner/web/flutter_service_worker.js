@@ -30,15 +30,15 @@ const RESOURCES = {"assets/AssetManifest.bin": "e20f8e54062c104db541faa728dc00f6
 "icons/Icon-maskable-192.png": "c457ef57daa1d16f64b27b786ec2ea3c",
 "icons/Icon-maskable-512.png": "301a7604d45b3e739efc881eb04896ea",
 "index.css": "f4f7f6926df727a92e126fe7f6dc9989",
-"index.html": "f511a220e791c4536a6d90e153adf3aa",
-"/": "f511a220e791c4536a6d90e153adf3aa",
-"index.js": "98e93e7d141ecb4e2b72468f4cf54928",
+"index.html": "31ee2b9765bc1b168f4ddfa9cd234bea",
+"/": "31ee2b9765bc1b168f4ddfa9cd234bea",
+"index.js": "082ef5b54d0be5e9ecdc6bf43e163745",
 "main.dart.js": "c0514a6044a92f2dda35860187dae39a",
 "manifest.json": "e3949ad1d54cd0b2211bc737a955065a",
 "material-symbols/material-symbols-sharp.woff2": "202125759128b82e1a93e6ad8bb051d0",
 "material-symbols/sharp.css": "bb287397f7d51ab6c8f07cbc63376276",
-"scanner1.html": "92647ca5d745ae782b10cbb7ea90d5a6",
-"scanner2.html": "99324652f37426534f7a24345ae59d75",
+"scanner1.html": "1a61ffc0d007b23658a6c8ffc41bb6db",
+"scanner2.html": "4ea1cb87864cd14141620a45308d5b21",
 "version.json": "f9145580f7dba99feb94dc0751105647"};
 // The application shell files that are downloaded before a service worker can
 // start.

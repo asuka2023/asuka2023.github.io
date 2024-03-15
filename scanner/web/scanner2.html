@@ -5,7 +5,7 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="index.css" rel="stylesheet">
-    <script src="index.js?v=37"></script>
+    <script src="index.js?v=39"></script>
     <title></title>
 </head>
 
@@ -57,9 +57,10 @@
     else {
         document.getElementById('support').innerHTML = '支援';
         openCamera('mediaDevices', 'myVideo', 'focal', 'focalvalue');
-intiaddEventListener('scannerW', 'scannerH', 'focal', 'myVideo', 'setting', 'torch', 'fullscreen', 'myCanvas', 'mediaDevices');
+        intiaddEventListener('scannerW', 'scannerH', 'focal', 'myVideo', 'setting', 'torch', 'fullscreen', 'myCanvas', 'mediaDevices');
         drawImge('scannerW', 'scannerH', 'myVideo', 'myCanvas', 'barcodeValue', 'cornerPoints');
     }
+
 </script>
 </body>
 
