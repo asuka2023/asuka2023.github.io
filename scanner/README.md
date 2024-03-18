@@ -10,3 +10,5 @@
 >>### 5.  [掃描_5](https://asuka2023.github.io/scanner/scanner5.html)
 >>### 6.  [掃描_6](https://asuka2023.github.io/scanner/scanner6.html)
 >>### 7.  [掃描_7](https://asuka2023.github.io/scanner/scanner7.html)
+>>### 範本
+>>### 1.  [條碼](https://asuka2023.github.io/scanner/barcode.jpg)
