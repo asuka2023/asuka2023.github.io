@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="index.css" rel="stylesheet">
+    <script src="index.js?v=13"></script>
+    <title></title>
+</head>
+
+<body>
+
+<video id="myVideo" style="display: none"></video>
+<canvas id="myCanvas"></canvas>
+<div id="divbottom">
+    <div>
+        <button type="button" id="fullscreen" class="buttonicon "> <span class="material-symbols-sharp"
+                                                                         id="fullscreenicon">fullscreen</span></button>
+
+        <button class="buttonicon btnflashlight" id="torch"><span
+                class="material-symbols-sharp">flashlight_on</span></button>
+
+        <button type="button" id="setting" class="buttonicon btnsetting"> <span
+                class="material-symbols-sharp">settings</span></button>
+    </div>
+    <span style="color:white;font-weight:bold">條碼:</span> <span id="barcodeValue"
+                                                                  style="color:red;font-weight:bold"></span>
+
+</div>
+<div class="content" style="display: none">
+    <p>條碼掃描:<span id="support"></span></p>
+    <p>鏡頭:<select id="mediaDevices" onchange="mediaDevices_onchange('mediaDevices','myVideo','focal')"></select></p>
+    <p>掃瞄範圍</p>
+    <p>寬:<input type="range" step="10" min="50" class="slider" id="scannerW">(<span id="scannerWvalue"></span>)
+    </p>
+    <p>長:<input type="range" step="10" min="50" class="slider" id="scannerH">(<span id="scannerHvalue"></span>)
+    </p>
+    <p>焦距:<input type="range" class="slider" id="focal">(<span id="focalvalue"></span>)
+    </p>
+
+    <!--<p>訊息:<span id="message"></span></p>-->
+    <p>點:<span id="cornerPoints" style="color:red;font-weight:bold"></span></p>
+
+</div>
+<script type="module">
+    console.log('load');
+    //關閉手電筒
+    localStorage.setItem("Torch", false);
+
+    screen_orientation('myCanvas');
+    stopCamera('myVideo');
+    //const checkenumeratedevices = await checkEnumerateDevices('mediaDevices');
+    checkEnumerateDevices('mediaDevices').then((support) => {
+        if (support) {
+            document.getElementById('support').innerHTML = '支援';
+            openCamera('mediaDevices', 'myVideo', 'focal', 'focalvalue');
+            intiaddEventListener('scannerW', 'scannerH', 'focal', 'myVideo', 'setting', 'torch', 'fullscreen', 'myCanvas', 'mediaDevices');
+            drawImge('scannerW', 'scannerH', 'myVideo', 'myCanvas', 'barcodeValue', 'cornerPoints');
+        }
+        else {
+            document.getElementById('support').innerHTML = '不支援';
+
+        }
+
+    })
+        .catch((err) => {
+            console.error(`${err.name}: ${err.message}`);
+        });
+
+</script>
+</body>
+
+</html>
