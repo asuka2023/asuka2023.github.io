@@ -610,5 +610,5 @@ function drawImge(scannerwId, scannerhId, videoId, canvasId, barcodevalueId, poi
 function postMessage(message) {
     setTimeout(() => {
         window.parent.postMessage(message)
-    }, "500");
+    }, "1000");
 }
