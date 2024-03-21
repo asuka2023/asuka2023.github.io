@@ -1,0 +1,76 @@
+@import 'material-symbols/sharp.css';
+
+body {
+    margin: 0;
+    background: rgba(0, 0, 0, 1);
+}
+
+.material-symbols-sharp {
+    font-variation-settings: 'FILL' 0, 'wght' 700, 'GRAD' 0, 'opsz' 48;
+	font-size: 36px;
+}
+
+#myCanvas {
+    position: fixed;
+    top: 0;
+    background: rgba(0, 0, 0, 0);
+    left: 50%;
+    transform: translate(-50%);
+}
+
+
+.content {
+    background: rgba(255, 255, 255, 0.5);
+    color: #000000;
+    padding: 20px;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    overflow: auto;
+    font-size: 16px;
+}
+
+.buttonicon {
+    background-color: #04AA6D;
+    border: none;
+    color: white;
+    padding: 1px 0px 0px 0px;
+    margin: 0px;
+    height:36px;
+    width:36px;
+    cursor: pointer;
+    /*
+
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    cursor: pointer;
+    */
+}
+
+.btnsetting {
+    background-color: #0077ff;
+}
+.btnflashlight {
+    background-color: #ff0000;
+}
+.btnhome {
+    background-color: #ffa500;
+}
+#divtop {
+    position: fixed;
+    top: 8px;
+    width: 100%;
+    padding: 0px 0px 0px 8px;
+
+}
+
+#divbottom {
+    position: fixed;
+    bottom: 8px;
+    width: 100%;
+    padding: 0px 0px 0px 8px;
+    
+}
