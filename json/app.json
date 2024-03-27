@@ -1,10 +1,10 @@
 {
 	"APP": [
 		{
-			"NAME": "barcodescannerandroid",
+			"NAME": "刷條碼",
 			"VERSION": "1.0.1",
-			"BUILD": "16",
-			"FILENAME":"刷條碼-V1-0-1-16-20240326165044-arm64-v8a.apk"
+			"BUILD": "21",
+			"FILENAME":"刷條碼-V1-0-1-21-20240327134238-arm64-v8a.apk"
 		}
 	]
 }
